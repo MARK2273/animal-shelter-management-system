@@ -8,7 +8,7 @@ import generalResponse from 'src/helper/genrelResponse.helper';
 export class AnimalTypeService {
   constructor(private animalTypeRepository: AnimalTypeRepository) {}
 
-  async createCustomer(animalType: AnimalTypeDto, res: Response) {
+  async createAnimalType(animalType: AnimalTypeDto, res: Response) {
     const validAnimalType = await this.findAnimalType(animalType.name);
     if (validAnimalType) {
       return generalResponse(

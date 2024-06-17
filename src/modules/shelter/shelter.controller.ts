@@ -23,6 +23,6 @@ export class ShelterController {
     @Body() shelterData: CreateShelterDto,
     @Res() res: Response,
   ) {
-    return await this.shelterService.createCustomer(shelterData, res);
+    return await this.shelterService.createShelter(shelterData, res);
   }
 }

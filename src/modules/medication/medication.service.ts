@@ -3,42 +3,46 @@ import { MedicationRepository } from './medication.repository';
 import { MedicationDto } from './dto/medication.dto';
 import { Response } from 'express';
 import generalResponse from 'src/helper/genrelResponse.helper';
+import { BreedRepository } from '../breed/breed.repository';
 import { Breed } from '../breed/breed.entity';
 
 @Injectable()
 export class MedicationService {
-  constructor(private medicationRepository: MedicationRepository) {}
+  constructor(
+    private medicationRepository: MedicationRepository,
+    private breedRepository: BreedRepository,
+  ) {}
 
   async createMedication(
     medication: MedicationDto,
     breed: Breed,
     res: Response,
   ) {
-    const validAllergie = await this.findAllergie(medication.allergies);
+    const validAllergie = await this.findAllergie(medication.allergie);
     if (validAllergie) {
       return generalResponse(
         res,
         [],
-        'Allergie already Exist.',
+        'Allergie already exists',
         'error',
         true,
         400,
       );
     } else {
-      const data = await this.medicationRepository.save({
-        allergies: medication.allergies,
+      const newMedication = await this.medicationRepository.save({
+        allergie: medication.allergie,
         veterinarian: medication.veterinarian,
         vaccination_date: medication.vaccination_date,
       });
 
-      breed.medication = [data, ...breed.medication];
+      breed.medication = [...breed.medication, newMedication];
       await breed.save();
 
       const createdMedication = {
-        id: data.id,
-        Allergie: data.allergies,
-        Veterinarian: data.veterinarian,
-        'Vaccination Date': data.vaccination_date,
+        id: newMedication.id,
+        Allergie: newMedication.allergie,
+        Veterinarian: newMedication.veterinarian,
+        'Vaccination Date': newMedication.vaccination_date,
       };
       return generalResponse(
         res,
@@ -51,13 +55,13 @@ export class MedicationService {
     }
   }
 
-  async findAllergie(allergies: string) {
-    const type = await this.medicationRepository.findOne({
-      where: { allergies },
+  async findAllergie(allergie: string) {
+    const allergies = await this.medicationRepository.findOne({
+      where: { allergie },
       select: {
         id: true,
       },
     });
-    return type;
+    return allergies;
   }
 }

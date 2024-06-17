@@ -13,7 +13,7 @@ export class Medication extends BaseEntity {
   id: number;
 
   @Column({ type: 'varchar' })
-  allergies: string;
+  allergie: string;
 
   @Column({ type: 'varchar' })
   veterinarian: string;

@@ -1,57 +1,91 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Scope } from '@nestjs/common';
 import { BreedRepository } from './breed.repository';
-import { BreedDto } from './dto/breed.dto';
+import { BreedDto, BreedWithMedicationDto } from './dto/breed.dto';
 import { Response } from 'express';
 import generalResponse from 'src/helper/genrelResponse.helper';
 import { Breed } from './breed.entity';
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class BreedService {
   constructor(private breedRepository: BreedRepository) {}
 
   async createBreed(breed: BreedDto, res: Response) {
-    // const validAnimalType = await this.findAnimalType(animalType.name);
-    // if (validAnimalType) {
-    //   return generalResponse(
-    //     res,
-    //     [],
-    //     'Animal Type already Exist.',
-    //     'error',
-    //     true,
-    //     400,
-    //   );
-    // } else {
-    //   const data = await this.animalTypeRepository.save(animalType);
-    //   const createdAnimalType = {
-    //     id: data.id,
-    //     Type: data.name,
-    //   };
-    //   return generalResponse(
-    //     res,
-    //     createdAnimalType,
-    //     'Animal Type created successfully',
-    //     'success',
-    //     true,
-    //     201,
-    //   );
-    // }
-    console.log('sdjvb');
+    const validBreed = await this.findBreed(breed.name);
+    if (validBreed) {
+      return generalResponse(
+        res,
+        [],
+        'Breed already exists',
+        'error',
+        true,
+        400,
+      );
+    } else {
+      const data = await this.breedRepository.save(breed);
+      const createdBreed = {
+        id: data.id,
+        Name: data.name,
+      };
+      return generalResponse(
+        res,
+        createdBreed,
+        'Breed created successfully',
+        'success',
+        true,
+        201,
+      );
+    }
   }
 
-  // async findAnimalType(name: string) {
-  //   const type = await this.animalTypeRepository.findOne({
-  //     where: { name },
-  //     select: {
-  //       id: true,
-  //     },
-  //   });
-  //   return type;
-  // }
+  async createBreedWithMedication(
+    breed: BreedWithMedicationDto,
+    res: Response,
+  ) {
+    const validBreed = await this.findBreed(breed.name);
+    if (validBreed) {
+      return generalResponse(
+        res,
+        [],
+        'Breed already exists',
+        'error',
+        true,
+        400,
+      );
+    } else {
+      // const data = await this.breedRepository.save({
+      //   name: breed.name,
+      //   medication: {},
+      // });
+      // const createdBreed = {
+      //   id: data.id,
+      //   Name: data.name,
+      // };
+      return generalResponse(
+        res,
+        'data',
+        'Breed created successfully',
+        'success',
+        true,
+        201,
+      );
+    }
+  }
 
-  async getBreedById(id: number): Promise<Breed> {
-    return await this.breedRepository.findOne({
-      where: { id },
-      relations: ['medication'],
+  async findBreed(name: string) {
+    const breed = await this.breedRepository.findOne({
+      where: { name },
+      select: {
+        id: true,
+      },
     });
+    return breed;
+  }
+
+  async findBreedId(id: number): Promise<Breed> {
+    const data = await this.breedRepository.findOne({
+      where: { id: +id },
+      relations: { medication: true },
+    });
+    return data;
   }
 }

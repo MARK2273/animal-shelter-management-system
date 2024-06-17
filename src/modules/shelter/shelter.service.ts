@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ShelterRepository } from './shelter.repository';
-import { CreateShelterDto } from './dto/CreateShelter.dto';
+import { CreateShelterDto } from './dto/createShelter.dto';
 import { Response } from 'express';
 import generalResponse from 'src/helper/genrelResponse.helper';
 
@@ -8,7 +8,7 @@ import generalResponse from 'src/helper/genrelResponse.helper';
 export class ShelterService {
   constructor(private shelterRepository: ShelterRepository) {}
 
-  async createCustomer(shelter: CreateShelterDto, res: Response) {
+  async createShelter(shelter: CreateShelterDto, res: Response) {
     const validShelter = await this.findShelterByEmail(shelter.email);
     if (validShelter) {
       return generalResponse(

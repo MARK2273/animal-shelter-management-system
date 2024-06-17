@@ -7,6 +7,11 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   username: 'root',
   password: 'root',
   database: 'animal_shelter',
-  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+  entities: [__dirname + '/../**/*.entity.{ts,js}'],
   synchronize: true,
+  migrations: [
+    /*...*/
+  ],
+  autoLoadEntities: true,
+  migrationsTableName: 'custom_migration_table',
 };

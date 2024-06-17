@@ -27,7 +27,7 @@ export class MedicationController {
     @Body() medicationData: MedicationDto,
     @Res() res: Response,
   ) {
-    const breed = await this.breedService.getBreedById(medicationData.breeId);
+    const breed = await this.breedService.findBreedId(medicationData.breedId);
     return await this.medicationService.createMedication(
       medicationData,
       breed,

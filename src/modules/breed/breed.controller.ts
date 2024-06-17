@@ -22,4 +22,14 @@ export class BreedController {
   async createBreed(@Body() breedData: BreedDto, @Res() res: Response) {
     return await this.breedService.createBreed(breedData, res);
   }
+
+  @Post('/createwithmedication')
+  @HttpCode(200)
+  @UsePipes(ValidationPipe)
+  async createBreedWithMedication(
+    @Body() breedData: BreedDto,
+    @Res() res: Response,
+  ) {
+    return await this.breedService.createBreed(breedData, res);
+  }
 }

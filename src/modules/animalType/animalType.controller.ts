@@ -23,6 +23,6 @@ export class AnimalTypeController {
     @Body() animalTypeData: AnimalTypeDto,
     @Res() res: Response,
   ) {
-    return await this.animalTypeService.createCustomer(animalTypeData, res);
+    return await this.animalTypeService.createAnimalType(animalTypeData, res);
   }
 }
