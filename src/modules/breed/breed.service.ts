@@ -6,6 +6,7 @@ import generalResponse from 'src/helper/genrelResponse.helper';
 import { Breed } from './breed.entity';
 import { Medication } from '../medication/medication.entity';
 import { MedicationRepository } from '../medication/medication.repository';
+import { UpdateBreedDto } from './dto/breedUpdate.dto';
 
 @Injectable({ scope: Scope.REQUEST })
 export class BreedService {
@@ -77,6 +78,27 @@ export class BreedService {
         201,
       );
     }
+  }
+
+  async updateBreed(id: number, updateBreedDto: UpdateBreedDto, res: Response) {
+    const breed = await this.findBreedId(id);
+    if (!breed) {
+      return generalResponse(res, '', 'No Breed Found', 'success', true, 201);
+    }
+
+    Object.assign(breed, updateBreedDto);
+
+    const data = await this.breedRepository.save(breed);
+    const updatedBreed = { name: data.name };
+
+    return generalResponse(
+      res,
+      updatedBreed,
+      'Breed updated successfully',
+      'success',
+      true,
+      201,
+    );
   }
 
   async findBreed(name: string) {

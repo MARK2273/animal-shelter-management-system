@@ -6,11 +6,14 @@ import {
   UsePipes,
   ValidationPipe,
   Res,
+  Put,
+  Param,
 } from '@nestjs/common';
 import { Response } from 'express';
 
 import { BreedService } from './breed.service';
 import { BreedDto, BreedWithMedicationDto } from './dto/breed.dto';
+import { UpdateBreedDto } from './dto/breedUpdate.dto';
 
 @Controller('breed')
 export class BreedController {
@@ -31,5 +34,14 @@ export class BreedController {
     @Res() res: Response,
   ) {
     return await this.breedService.createBreedWithMedication(breedData, res);
+  }
+
+  @Put('/update/:id')
+  async update(
+    @Param('id') id: number,
+    @Body() updateBreedDto: UpdateBreedDto,
+    @Res() res: Response,
+  ) {
+    return this.breedService.updateBreed(id, updateBreedDto, res);
   }
 }

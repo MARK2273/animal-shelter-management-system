@@ -5,6 +5,8 @@ import { Response } from 'express';
 import generalResponse from 'src/helper/genrelResponse.helper';
 import { BreedRepository } from '../breed/breed.repository';
 import { Breed } from '../breed/breed.entity';
+import { UpdateMedicationDto } from './dto/medicationUpdate.dto';
+import { Medication } from './medication.entity';
 
 @Injectable()
 export class MedicationService {
@@ -12,6 +14,35 @@ export class MedicationService {
     private medicationRepository: MedicationRepository,
     private breedRepository: BreedRepository,
   ) {}
+
+  async getMedicationsByBreedId(breedId: number): Promise<Medication[]> {
+    return this.medicationRepository.find({
+      where: { breed: { id: breedId } },
+      select: {
+        allergie: true,
+        veterinarian: true,
+        vaccination_date: true,
+        breed: {
+          name: true,
+        },
+      },
+      relations: ['breed'],
+    });
+  }
+
+  async getAllMedications(): Promise<Medication[]> {
+    return this.medicationRepository.find({
+      relations: ['breed'],
+      select: {
+        allergie: true,
+        veterinarian: true,
+        vaccination_date: true,
+        breed: {
+          name: true,
+        },
+      },
+    });
+  }
 
   async createMedication(
     medication: MedicationDto,
@@ -53,6 +84,44 @@ export class MedicationService {
         201,
       );
     }
+  }
+
+  async updateMedication(
+    id: number,
+    updateMedicationDto: UpdateMedicationDto,
+    res: Response,
+  ) {
+    const medication = await this.validMedication(id);
+
+    if (!medication) {
+      return generalResponse(
+        res,
+        '',
+        'No Medication Found',
+        'success',
+        true,
+        201,
+      );
+    }
+
+    Object.assign(medication, updateMedicationDto);
+
+    const data = await this.medicationRepository.save(medication);
+
+    const updatedData = {
+      allergie: data.allergie,
+      veterinarian: data.veterinarian,
+      'Vaccination Date': data.vaccination_date,
+    };
+
+    return generalResponse(
+      res,
+      updatedData,
+      'Medication updated successfully',
+      'success',
+      true,
+      201,
+    );
   }
 
   async deleteMedication(breed, res: Response) {
