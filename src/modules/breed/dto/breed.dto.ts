@@ -1,5 +1,4 @@
 import { IsNotEmpty } from 'class-validator';
-import { Medication } from 'src/modules/medication/medication.entity';
 // import { Medication } from '../../medication/medication.entity';
 
 export class BreedDto {
@@ -11,6 +10,12 @@ export class BreedWithMedicationDto {
   @IsNotEmpty({ message: 'Animal type should not be empty ' })
   name: string;
 
-  @IsNotEmpty({ message: 'Medication Information should not be empty ' })
-  medication: Medication;
+  @IsNotEmpty({ message: 'Allergie name should not be empty ' })
+  allergie: string;
+
+  @IsNotEmpty({ message: 'Veterinarian name should not be empty' })
+  veterinarian: string;
+
+  @IsNotEmpty({ message: 'Vaccination Date should not be empty' })
+  vaccination_date: Date;
 }

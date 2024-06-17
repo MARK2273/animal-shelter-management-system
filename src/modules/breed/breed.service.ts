@@ -4,10 +4,15 @@ import { BreedDto, BreedWithMedicationDto } from './dto/breed.dto';
 import { Response } from 'express';
 import generalResponse from 'src/helper/genrelResponse.helper';
 import { Breed } from './breed.entity';
+import { Medication } from '../medication/medication.entity';
+import { MedicationRepository } from '../medication/medication.repository';
 
 @Injectable({ scope: Scope.REQUEST })
 export class BreedService {
-  constructor(private breedRepository: BreedRepository) {}
+  constructor(
+    private breedRepository: BreedRepository,
+    private medicationRepository: MedicationRepository,
+  ) {}
 
   async createBreed(breed: BreedDto, res: Response) {
     const validBreed = await this.findBreed(breed.name);
@@ -38,10 +43,10 @@ export class BreedService {
   }
 
   async createBreedWithMedication(
-    breed: BreedWithMedicationDto,
+    breedData: BreedWithMedicationDto,
     res: Response,
   ) {
-    const validBreed = await this.findBreed(breed.name);
+    const validBreed = await this.findBreed(breedData.name);
     if (validBreed) {
       return generalResponse(
         res,
@@ -52,18 +57,21 @@ export class BreedService {
         400,
       );
     } else {
-      // const data = await this.breedRepository.save({
-      //   name: breed.name,
-      //   medication: {},
-      // });
-      // const createdBreed = {
-      //   id: data.id,
-      //   Name: data.name,
-      // };
+      const medication = new Medication();
+      medication.allergie = breedData.allergie;
+      medication.veterinarian = breedData.veterinarian;
+      medication.vaccination_date = new Date(breedData.vaccination_date);
+      await this.medicationRepository.save(medication);
+
+      const breed = new Breed();
+      breed.name = breedData.name;
+      breed.medication = [medication];
+      await this.breedRepository.save(breed);
+
       return generalResponse(
         res,
         'data',
-        'Breed created successfully',
+        'Breed created successfully with Mediaction',
         'success',
         true,
         201,

@@ -6,6 +6,8 @@ import {
   UsePipes,
   ValidationPipe,
   Res,
+  Param,
+  Delete,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -33,5 +35,10 @@ export class MedicationController {
       breed,
       res,
     );
+  }
+
+  @Delete('/delete/:breedId')
+  async deleteMedication(@Param() breedId: number, @Res() res: Response) {
+    return await this.medicationService.deleteMedication(breedId, res);
   }
 }

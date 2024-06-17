@@ -40,7 +40,7 @@ export class ShelterService {
 
   async findShelterByEmail(email: string) {
     const shelter = await this.shelterRepository.findOne({
-      where: { email, is_deleted: false },
+      where: { email, deleted_at: null },
       select: {
         id: true,
       },

@@ -3,7 +3,7 @@ dotenv.config();
 import { DataSource } from 'typeorm';
 
 export default new DataSource({
-  type: 'postgres',
+  type: 'mysql',
   host: process.env.DATABASE_HOST,
   port: +process.env.DATABASE_PORT,
   username: process.env.DATABASE_USER,

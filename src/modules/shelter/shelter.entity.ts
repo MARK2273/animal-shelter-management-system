@@ -30,7 +30,4 @@ export class Shelter extends BaseEntity {
 
   @DeleteDateColumn({ type: 'timestamp' })
   deleted_at: Date;
-
-  @Column({ type: 'boolean', default: false })
-  is_deleted: boolean;
 }

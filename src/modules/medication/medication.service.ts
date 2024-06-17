@@ -55,6 +55,33 @@ export class MedicationService {
     }
   }
 
+  async deleteMedication(breed, res: Response) {
+    const breedId = breed.breedId;
+    console.log(breedId);
+    const validMedication = await this.validMedication(breedId);
+    if (validMedication) {
+      await this.medicationRepository.softDelete({ id: breedId });
+
+      return generalResponse(
+        res,
+        '',
+        'Medication deleted successfully',
+        'success',
+        true,
+        201,
+      );
+    } else {
+      return generalResponse(
+        res,
+        '',
+        'No Medication Found',
+        'success',
+        true,
+        201,
+      );
+    }
+  }
+
   async findAllergie(allergie: string) {
     const allergies = await this.medicationRepository.findOne({
       where: { allergie },
@@ -63,5 +90,11 @@ export class MedicationService {
       },
     });
     return allergies;
+  }
+
+  async validMedication(id: number) {
+    return await this.medicationRepository.findOne({
+      where: { id },
+    });
   }
 }
