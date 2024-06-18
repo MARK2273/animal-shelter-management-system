@@ -47,4 +47,12 @@ export class ShelterService {
     });
     return shelter;
   }
+
+  async findShelterId(id: number) {
+    const data = await this.shelterRepository.findOne({
+      where: { id: +id },
+      relations: ['staff'],
+    });
+    return data;
+  }
 }

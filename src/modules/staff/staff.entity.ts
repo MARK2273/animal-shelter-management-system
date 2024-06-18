@@ -1,29 +1,39 @@
-import { Staff } from '../staff/staff.entity';
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Shelter } from '../shelter/shelter.entity';
 
-@Entity('shelters')
-export class Shelter extends BaseEntity {
+export enum Position {
+  OWNER = 'owner',
+  WORKER = 'worker',
+}
+
+@Entity('staffs')
+export class Staff extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ type: 'varchar' })
   name: string;
 
+  @Column({ type: 'enum', enum: Position })
+  position: Position;
+
   @Column({ type: 'varchar', unique: true })
   email: string;
 
   @Column({ type: 'varchar' })
-  address: string;
+  password: string;
+
+  @Column({ type: 'varchar' })
+  contact: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
@@ -34,7 +44,6 @@ export class Shelter extends BaseEntity {
   @DeleteDateColumn({ type: 'timestamp' })
   deleted_at: Date;
 
-  @ManyToMany(() => Staff, (staff) => staff.shelter)
-  @JoinTable()
-  staff: Staff[];
+  @ManyToMany(() => Shelter, (shelter) => shelter.staff)
+  shelter: Shelter[];
 }
