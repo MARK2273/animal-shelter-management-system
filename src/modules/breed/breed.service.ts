@@ -16,29 +16,40 @@ export class BreedService {
   ) {}
 
   async createBreed(breed: BreedDto, res: Response) {
-    const validBreed = await this.findBreed(breed.name);
-    if (validBreed) {
+    try {
+      const validBreed = await this.findBreed(breed.name);
+      if (validBreed) {
+        return generalResponse(
+          res,
+          [],
+          'Breed already exists',
+          'error',
+          true,
+          400,
+        );
+      } else {
+        const data = await this.breedRepository.save(breed);
+        const createdBreed = {
+          id: data.id,
+          Name: data.name,
+        };
+        return generalResponse(
+          res,
+          createdBreed,
+          'Breed created successfully',
+          'success',
+          true,
+          201,
+        );
+      }
+    } catch (error) {
       return generalResponse(
         res,
-        [],
-        'Breed already exists',
+        error,
+        'Something went wrong in Creating breed',
         'error',
         true,
-        400,
-      );
-    } else {
-      const data = await this.breedRepository.save(breed);
-      const createdBreed = {
-        id: data.id,
-        Name: data.name,
-      };
-      return generalResponse(
-        res,
-        createdBreed,
-        'Breed created successfully',
-        'success',
-        true,
-        201,
+        500,
       );
     }
   }
@@ -47,58 +58,80 @@ export class BreedService {
     breedData: BreedWithMedicationDto,
     res: Response,
   ) {
-    const validBreed = await this.findBreed(breedData.name);
-    if (validBreed) {
+    try {
+      const validBreed = await this.findBreed(breedData.name);
+      if (validBreed) {
+        return generalResponse(
+          res,
+          [],
+          'Breed already exists',
+          'error',
+          true,
+          400,
+        );
+      } else {
+        const medication = new Medication();
+        medication.allergie = breedData.allergie;
+        medication.veterinarian = breedData.veterinarian;
+        medication.vaccination_date = new Date(breedData.vaccination_date);
+        await this.medicationRepository.save(medication);
+
+        const breed = new Breed();
+        breed.name = breedData.name;
+        breed.medication = [medication];
+        await this.breedRepository.save(breed);
+
+        return generalResponse(
+          res,
+          'data',
+          'Breed created successfully with Mediaction',
+          'success',
+          true,
+          201,
+        );
+      }
+    } catch (error) {
       return generalResponse(
         res,
-        [],
-        'Breed already exists',
+        error,
+        'Something went wrong in Creating breed with medication',
         'error',
         true,
-        400,
-      );
-    } else {
-      const medication = new Medication();
-      medication.allergie = breedData.allergie;
-      medication.veterinarian = breedData.veterinarian;
-      medication.vaccination_date = new Date(breedData.vaccination_date);
-      await this.medicationRepository.save(medication);
-
-      const breed = new Breed();
-      breed.name = breedData.name;
-      breed.medication = [medication];
-      await this.breedRepository.save(breed);
-
-      return generalResponse(
-        res,
-        'data',
-        'Breed created successfully with Mediaction',
-        'success',
-        true,
-        201,
+        500,
       );
     }
   }
 
   async updateBreed(id: number, updateBreedDto: UpdateBreedDto, res: Response) {
-    const breed = await this.findBreedId(id);
-    if (!breed) {
-      return generalResponse(res, '', 'No Breed Found', 'success', true, 201);
+    try {
+      const breed = await this.findBreedId(id);
+      if (!breed) {
+        return generalResponse(res, '', 'No Breed Found', 'success', true, 201);
+      }
+
+      Object.assign(breed, updateBreedDto);
+
+      const data = await this.breedRepository.save(breed);
+      const updatedBreed = { name: data.name };
+
+      return generalResponse(
+        res,
+        updatedBreed,
+        'Breed updated successfully',
+        'success',
+        true,
+        201,
+      );
+    } catch (error) {
+      return generalResponse(
+        res,
+        error,
+        'Something went wrong in Update Breed',
+        'error',
+        true,
+        500,
+      );
     }
-
-    Object.assign(breed, updateBreedDto);
-
-    const data = await this.breedRepository.save(breed);
-    const updatedBreed = { name: data.name };
-
-    return generalResponse(
-      res,
-      updatedBreed,
-      'Breed updated successfully',
-      'success',
-      true,
-      201,
-    );
   }
 
   async findBreed(name: string) {

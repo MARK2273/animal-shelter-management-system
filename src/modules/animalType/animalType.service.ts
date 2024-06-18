@@ -9,29 +9,40 @@ export class AnimalTypeService {
   constructor(private animalTypeRepository: AnimalTypeRepository) {}
 
   async createAnimalType(animalType: AnimalTypeDto, res: Response) {
-    const validAnimalType = await this.findAnimalType(animalType.name);
-    if (validAnimalType) {
+    try {
+      const validAnimalType = await this.findAnimalType(animalType.name);
+      if (validAnimalType) {
+        return generalResponse(
+          res,
+          [],
+          'Animal Type already Exist.',
+          'error',
+          true,
+          400,
+        );
+      } else {
+        const data = await this.animalTypeRepository.save(animalType);
+        const createdAnimalType = {
+          id: data.id,
+          Type: data.name,
+        };
+        return generalResponse(
+          res,
+          createdAnimalType,
+          'Animal Type created successfully',
+          'success',
+          true,
+          201,
+        );
+      }
+    } catch (error) {
       return generalResponse(
         res,
-        [],
-        'Animal Type already Exist.',
+        error,
+        'Something went wrong in Creating Animal Type',
         'error',
         true,
-        400,
-      );
-    } else {
-      const data = await this.animalTypeRepository.save(animalType);
-      const createdAnimalType = {
-        id: data.id,
-        Type: data.name,
-      };
-      return generalResponse(
-        res,
-        createdAnimalType,
-        'Animal Type created successfully',
-        'success',
-        true,
-        201,
+        500,
       );
     }
   }

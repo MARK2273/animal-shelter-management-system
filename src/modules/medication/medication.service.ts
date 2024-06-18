@@ -49,39 +49,50 @@ export class MedicationService {
     breed: Breed,
     res: Response,
   ) {
-    const validAllergie = await this.findAllergie(medication.allergie);
-    if (validAllergie) {
+    try {
+      const validAllergie = await this.findAllergie(medication.allergie);
+      if (validAllergie) {
+        return generalResponse(
+          res,
+          [],
+          'Allergie already exists',
+          'error',
+          true,
+          400,
+        );
+      } else {
+        const newMedication = await this.medicationRepository.save({
+          allergie: medication.allergie,
+          veterinarian: medication.veterinarian,
+          vaccination_date: medication.vaccination_date,
+        });
+
+        breed.medication = [...breed.medication, newMedication];
+        await breed.save();
+
+        const createdMedication = {
+          id: newMedication.id,
+          Allergie: newMedication.allergie,
+          Veterinarian: newMedication.veterinarian,
+          'Vaccination Date': newMedication.vaccination_date,
+        };
+        return generalResponse(
+          res,
+          createdMedication,
+          'Medication created successfully',
+          'success',
+          true,
+          201,
+        );
+      }
+    } catch (error) {
       return generalResponse(
         res,
-        [],
-        'Allergie already exists',
+        error,
+        'Something went wrong in Creating Medication',
         'error',
         true,
-        400,
-      );
-    } else {
-      const newMedication = await this.medicationRepository.save({
-        allergie: medication.allergie,
-        veterinarian: medication.veterinarian,
-        vaccination_date: medication.vaccination_date,
-      });
-
-      breed.medication = [...breed.medication, newMedication];
-      await breed.save();
-
-      const createdMedication = {
-        id: newMedication.id,
-        Allergie: newMedication.allergie,
-        Veterinarian: newMedication.veterinarian,
-        'Vaccination Date': newMedication.vaccination_date,
-      };
-      return generalResponse(
-        res,
-        createdMedication,
-        'Medication created successfully',
-        'success',
-        true,
-        201,
+        500,
       );
     }
   }
@@ -91,62 +102,84 @@ export class MedicationService {
     updateMedicationDto: UpdateMedicationDto,
     res: Response,
   ) {
-    const medication = await this.validMedication(id);
+    try {
+      const medication = await this.validMedication(id);
 
-    if (!medication) {
+      if (!medication) {
+        return generalResponse(
+          res,
+          '',
+          'No Medication Found',
+          'success',
+          true,
+          201,
+        );
+      }
+
+      Object.assign(medication, updateMedicationDto);
+
+      const data = await this.medicationRepository.save(medication);
+
+      const updatedData = {
+        allergie: data.allergie,
+        veterinarian: data.veterinarian,
+        'Vaccination Date': data.vaccination_date,
+      };
+
       return generalResponse(
         res,
-        '',
-        'No Medication Found',
+        updatedData,
+        'Medication updated successfully',
         'success',
         true,
         201,
       );
+    } catch (error) {
+      return generalResponse(
+        res,
+        error,
+        'Something went wrong in updating Animal Type',
+        'error',
+        true,
+        500,
+      );
     }
-
-    Object.assign(medication, updateMedicationDto);
-
-    const data = await this.medicationRepository.save(medication);
-
-    const updatedData = {
-      allergie: data.allergie,
-      veterinarian: data.veterinarian,
-      'Vaccination Date': data.vaccination_date,
-    };
-
-    return generalResponse(
-      res,
-      updatedData,
-      'Medication updated successfully',
-      'success',
-      true,
-      201,
-    );
   }
 
   async deleteMedication(breed, res: Response) {
-    const breedId = breed.breedId;
-    console.log(breedId);
-    const validMedication = await this.validMedication(breedId);
-    if (validMedication) {
-      await this.medicationRepository.softDelete({ id: breedId });
+    try {
+      const breedId = breed.breedId;
+      console.log(breedId);
+      const validMedication = await this.validMedication(breedId);
+      if (validMedication) {
+        await this.medicationRepository.softDelete({ id: breedId });
 
+        return generalResponse(
+          res,
+          '',
+          'Medication deleted successfully',
+          'success',
+          true,
+          201,
+        );
+      } else {
+        return generalResponse(
+          res,
+          '',
+          'No Medication Found',
+          'success',
+          true,
+          201,
+        );
+      }
+    } catch (error) {
       return generalResponse(
         res,
-        '',
-        'Medication deleted successfully',
-        'success',
+        error,
+        'Something went wrong in Deleting Animal Type',
+        'error',
         true,
-        201,
-      );
-    } else {
-      return generalResponse(
-        res,
-        '',
-        'No Medication Found',
-        'success',
-        true,
-        201,
+        500,
       );
     }
   }
