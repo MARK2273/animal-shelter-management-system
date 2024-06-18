@@ -205,7 +205,7 @@ export class BreedService {
   async findBreedId(id: number): Promise<Breed> {
     const data = await this.breedRepository.findOne({
       where: { id: +id },
-      relations: ['medication'],
+      relations: ['medication', 'animal'],
     });
     return data;
   }

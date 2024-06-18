@@ -45,7 +45,6 @@ export class MedicationController {
   ) {
     console.log(medicationData);
     const breed = await this.breedService.findBreedId(medicationData.breedId);
-    console.log(breed);
     if (breed) {
       return await this.medicationService.createMedication(
         medicationData,

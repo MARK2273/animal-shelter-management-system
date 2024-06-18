@@ -152,4 +152,12 @@ export class AnimalDescriptionService {
       where: { id },
     });
   }
+
+  async findAnimalDescriptionId(id: number) {
+    const description = await this.animalDescriptionRepository.findOne({
+      where: { id },
+      relations: ['animal'],
+    });
+    return description;
+  }
 }

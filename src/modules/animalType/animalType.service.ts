@@ -56,4 +56,12 @@ export class AnimalTypeService {
     });
     return type;
   }
+
+  async findAnimalTypeId(id: number) {
+    const type = await this.animalTypeRepository.findOne({
+      where: { id },
+      relations: ['animal'],
+    });
+    return type;
+  }
 }
