@@ -13,6 +13,7 @@ import {
 } from 'typeorm';
 import { AnimalType } from '../animalType/animalType.entity';
 import { Breed } from '../breed/breed.entity';
+import { Shelter } from '../shelter/shelter.entity';
 
 export enum Gender {
   MALE = 'male',
@@ -63,4 +64,7 @@ export class Animal extends BaseEntity {
   )
   @JoinColumn()
   animalDescription: AnimalDescription;
+
+  @ManyToOne(() => Shelter, (shelter) => shelter.animals)
+  shelter: Shelter;
 }

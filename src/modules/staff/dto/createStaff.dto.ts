@@ -1,4 +1,11 @@
-import { IsNotEmpty, MaxLength, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 import { Position } from '../staff.entity';
 
 export class CreateStaffDto {
@@ -21,4 +28,24 @@ export class CreateStaffDto {
 
   @IsNotEmpty({ message: 'Shelter should not be empty' })
   sheltersId: number;
+}
+
+export class CreateStaffWithShelterDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsEnum(Position)
+  position: Position;
+
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password: string;
+
+  @IsString()
+  @IsNotEmpty()
+  contact: string;
 }

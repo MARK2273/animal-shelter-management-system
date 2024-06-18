@@ -28,4 +28,7 @@ export class CreateAnimalDto {
 
   @IsNotEmpty({ message: 'Animal Description should not be empty' })
   animalDescriptionId: number;
+
+  @IsNotEmpty({ message: 'Shelter should not be empty' })
+  shelterId: number;
 }

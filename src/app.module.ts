@@ -42,6 +42,8 @@ import { StaffModule } from './modules/staff/staff.module';
     AnimalDescriptionModule,
     AnimalModule,
     StaffModule,
+    BreedModule,
+    StaffModule,
   ],
 })
 export class AppModule {}

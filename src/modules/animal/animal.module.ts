@@ -10,6 +10,9 @@ import { AnimalTypeRepository } from '../animalType/animalType.repository';
 import { AnimalTypeService } from '../animalType/animalType.service';
 import { AnimalDescriptionRepository } from '../animalDescription/animalDescription.repository';
 import { AnimalDescriptionService } from '../animalDescription/animalDescription.service';
+import { ShelterRepository } from '../shelter/shelter.repository';
+import { ShelterService } from '../shelter/shelter.service';
+import { StaffRepository } from '../staff/staff.repository';
 
 @Module({
   controllers: [AnimalController],
@@ -23,6 +26,8 @@ import { AnimalDescriptionService } from '../animalDescription/animalDescription
     AnimalTypeService,
     AnimalDescriptionRepository,
     AnimalDescriptionService,
+    ShelterRepository,
+    ShelterService,
   ],
   imports: [
     TypeOrmModule.forFeature([
@@ -31,6 +36,8 @@ import { AnimalDescriptionService } from '../animalDescription/animalDescription
       MedicationRepository,
       AnimalTypeRepository,
       AnimalDescriptionRepository,
+      ShelterRepository,
+      StaffRepository,
     ]),
   ],
 })

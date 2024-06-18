@@ -1,3 +1,4 @@
+import { Animal } from '../animal/animal.entity';
 import { Staff } from '../staff/staff.entity';
 import {
   BaseEntity,
@@ -7,6 +8,7 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -37,4 +39,7 @@ export class Shelter extends BaseEntity {
   @ManyToMany(() => Staff, (staff) => staff.shelter)
   @JoinTable()
   staff: Staff[];
+
+  @OneToMany(() => Animal, (animal) => animal.shelter)
+  animals: Animal[];
 }

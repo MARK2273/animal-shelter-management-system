@@ -42,6 +42,7 @@ export class AnimalService {
     breed,
     animalType,
     animalDescription,
+    shelter,
     res: Response,
   ) {
     try {
@@ -63,6 +64,10 @@ export class AnimalService {
 
       animalDescription.animal = newAnimal;
       await animalDescription.save();
+
+      console.log(shelter);
+      shelter.animals = [...shelter.animals, newAnimal];
+      await shelter.save();
 
       return generalResponse(
         res,

@@ -21,6 +21,7 @@ import generalResponse from 'src/helper/genrelResponse.helper';
 import { AnimalTypeService } from '../animalType/animalType.service';
 import { AnimalDescriptionService } from '../animalDescription/animalDescription.service';
 import { UpdateAnimalDto } from './dto/animalUpdate.dto';
+import { ShelterService } from '../shelter/shelter.service';
 
 @Controller('animal')
 export class AnimalController {
@@ -29,6 +30,7 @@ export class AnimalController {
     private breedService: BreedService,
     private animalTypeService: AnimalTypeService,
     private animalDescriptionService: AnimalDescriptionService,
+    private shelterService: ShelterService,
   ) {}
 
   @Get('/getall')
@@ -51,13 +53,18 @@ export class AnimalController {
       await this.animalDescriptionService.findAnimalDescriptionId(
         customerData.animalDescriptionId,
       );
+    const shelter = await this.shelterService.findShelterId(
+      customerData.shelterId,
+    );
+    console.log(shelter);
 
-    if (breed && animalType && animalDescription) {
+    if (breed && animalType && animalDescription && shelter) {
       return await this.animalService.createAnimal(
         customerData,
         breed,
         animalType,
         animalDescription,
+        shelter,
         res,
       );
     } else {
