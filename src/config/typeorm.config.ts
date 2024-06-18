@@ -8,7 +8,7 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   password: 'root',
   database: 'animal_shelter',
   entities: [__dirname + '/../**/*.entity.{ts,js}'],
-  synchronize: false,
+  synchronize: true,
   migrations: [
     /*...*/
   ],

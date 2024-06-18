@@ -18,7 +18,9 @@ export class Breed extends BaseEntity {
   @Column()
   name: string;
 
-  @OneToMany(() => Medication, (medication) => medication.breed)
+  @OneToMany(() => Medication, (medication) => medication.breed, {
+    onDelete: 'CASCADE',
+  })
   medication: Medication[];
 
   @CreateDateColumn({ type: 'timestamp' })

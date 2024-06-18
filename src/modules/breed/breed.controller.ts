@@ -8,6 +8,8 @@ import {
   Res,
   Put,
   Param,
+  Delete,
+  Get,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -18,6 +20,11 @@ import { UpdateBreedDto } from './dto/breedUpdate.dto';
 @Controller('breed')
 export class BreedController {
   constructor(private breedService: BreedService) {}
+
+  @Get('/getall')
+  async getAllBreeds() {
+    return this.breedService.getAllBreeds();
+  }
 
   @Post('/create')
   @HttpCode(200)
@@ -43,5 +50,10 @@ export class BreedController {
     @Res() res: Response,
   ) {
     return this.breedService.updateBreed(id, updateBreedDto, res);
+  }
+
+  @Delete('/delete/:breedId')
+  async deleteMedication(@Param() breedId: number, @Res() res: Response) {
+    return await this.breedService.deleteBreed(breedId, res);
   }
 }

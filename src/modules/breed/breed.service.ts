@@ -15,6 +15,20 @@ export class BreedService {
     private medicationRepository: MedicationRepository,
   ) {}
 
+  async getAllBreeds() {
+    return this.breedRepository.find({
+      relations: ['medication'],
+      select: {
+        name: true,
+        medication: {
+          allergie: true,
+          veterinarian: true,
+          vaccination_date: true,
+        },
+      },
+    });
+  }
+
   async createBreed(breed: BreedDto, res: Response) {
     try {
       const validBreed = await this.findBreed(breed.name);
@@ -109,6 +123,18 @@ export class BreedService {
         return generalResponse(res, '', 'No Breed Found', 'success', true, 201);
       }
 
+      const validBreed = await this.findBreed(updateBreedDto.name);
+      if (validBreed) {
+        return generalResponse(
+          res,
+          [],
+          'Breed already exists',
+          'error',
+          true,
+          400,
+        );
+      }
+
       Object.assign(breed, updateBreedDto);
 
       const data = await this.breedRepository.save(breed);
@@ -134,6 +160,38 @@ export class BreedService {
     }
   }
 
+  async deleteBreed(breed, res: Response) {
+    try {
+      const breedId = breed.breedId;
+      const validBreed = await this.findBreedId(breedId);
+      if (validBreed) {
+        await this.breedRepository.softDelete({
+          id: breedId,
+        });
+        await this.medicationRepository.softDelete({ breed: { id: breedId } });
+        return generalResponse(
+          res,
+          '',
+          'Breed deleted successfully',
+          'success',
+          true,
+          201,
+        );
+      } else {
+        return generalResponse(res, '', 'No Breed Found', 'success', true, 201);
+      }
+    } catch (error) {
+      return generalResponse(
+        res,
+        error,
+        'Something went wrong in Deleting Breed',
+        'error',
+        true,
+        500,
+      );
+    }
+  }
+
   async findBreed(name: string) {
     const breed = await this.breedRepository.findOne({
       where: { name },
@@ -147,7 +205,7 @@ export class BreedService {
   async findBreedId(id: number): Promise<Breed> {
     const data = await this.breedRepository.findOne({
       where: { id: +id },
-      relations: { medication: true },
+      relations: ['medication'],
     });
     return data;
   }

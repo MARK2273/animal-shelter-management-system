@@ -116,6 +116,20 @@ export class MedicationService {
         );
       }
 
+      const validAllergie = await this.findAllergie(
+        updateMedicationDto.allergie,
+      );
+      if (validAllergie) {
+        return generalResponse(
+          res,
+          [],
+          'Allergie already exists',
+          'error',
+          true,
+          400,
+        );
+      }
+
       Object.assign(medication, updateMedicationDto);
 
       const data = await this.medicationRepository.save(medication);
@@ -149,7 +163,6 @@ export class MedicationService {
   async deleteMedication(breed, res: Response) {
     try {
       const breedId = breed.breedId;
-      console.log(breedId);
       const validMedication = await this.validMedication(breedId);
       if (validMedication) {
         await this.medicationRepository.softDelete({ id: breedId });
@@ -176,7 +189,7 @@ export class MedicationService {
       return generalResponse(
         res,
         error,
-        'Something went wrong in Deleting Animal Type',
+        'Something went wrong in Deleting Medication',
         'error',
         true,
         500,
