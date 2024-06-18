@@ -6,6 +6,7 @@ import { AnimalTypeModule } from './modules/animalType/animalType.module';
 import { BreedModule } from './modules/breed/breed.module';
 import { MedicationModule } from './modules/medication/medication.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AnimalDescriptionModule } from './modules/animalDescription/animalDescription.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     AnimalTypeModule,
     MedicationModule,
     BreedModule,
+    AnimalDescriptionModule,
   ],
 })
 export class AppModule {}

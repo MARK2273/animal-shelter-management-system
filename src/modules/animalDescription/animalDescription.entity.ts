@@ -4,30 +4,25 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Medication } from '../medication/medication.entity';
 import { Animal } from '../animal/animal.entity';
 
-@Entity('breeds')
-export class Breed extends BaseEntity {
+@Entity('animal_description')
+export class AnimalDescription extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  name: string;
+  @Column({ type: 'varchar' })
+  food_preference: string;
 
-  @OneToMany(() => Medication, (medication) => medication.breed, {
-    onDelete: 'CASCADE',
-  })
-  medication: Medication[];
+  @Column({ type: 'date' })
+  special_day: Date;
 
-  @OneToMany(() => Animal, (animal) => animal.breed, {
-    onDelete: 'CASCADE',
-  })
-  animal: Animal[];
+  @OneToOne(() => Animal, (animal) => animal.animalDescription)
+  animal: Animal;
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;

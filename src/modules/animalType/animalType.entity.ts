@@ -4,9 +4,11 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Animal } from '../animal/animal.entity';
 
 @Entity('animal_types')
 export class AnimalType extends BaseEntity {
@@ -15,6 +17,11 @@ export class AnimalType extends BaseEntity {
 
   @Column({ type: 'varchar' })
   name: string;
+
+  @OneToMany(() => Animal, (animal) => animal.animalType, {
+    onDelete: 'CASCADE',
+  })
+  animal: Animal[];
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
