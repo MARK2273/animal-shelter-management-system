@@ -57,7 +57,6 @@ export class CreateStaffDto {
     example: 1,
   })
   @IsNotEmpty({ message: 'Shelter should not be empty' })
-  @IsInt()
   sheltersId: number;
 }
 

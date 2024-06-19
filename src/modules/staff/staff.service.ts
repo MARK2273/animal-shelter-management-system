@@ -5,10 +5,14 @@ import { Response } from 'express';
 import generalResponse from 'src/helper/genrelResponse.helper';
 import { Shelter } from '../shelter/shelter.entity';
 import { UpdateStaffDto } from './dto/staffUpdate.dto';
+import { EntityManager } from 'typeorm';
 
 @Injectable()
 export class StaffService {
-  constructor(private staffRepository: StaffRepository) {}
+  constructor(
+    private staffRepository: StaffRepository,
+    private readonly entityManager: EntityManager,
+  ) {}
 
   async getStaffByShelterId(shelterId: number) {
     return this.staffRepository.find({
@@ -32,6 +36,7 @@ export class StaffService {
   async createStaff(staff: CreateStaffDto, shelter: Shelter, res: Response) {
     try {
       const validStaff = await this.findStaffByEmail(staff.email);
+
       if (validStaff) {
         return generalResponse(
           res,
@@ -41,29 +46,35 @@ export class StaffService {
           true,
           400,
         );
-      } else {
-        const newStaff = await this.staffRepository.save(staff);
-
-        shelter.staff.push(newStaff);
-
-        await shelter.save();
-
-        const createdStaff = {
-          id: newStaff.id,
-          Name: newStaff.name,
-          Email: newStaff.email,
-          contact: newStaff.contact,
-        };
-        return generalResponse(
-          res,
-          createdStaff,
-          'Staff created successfully',
-          'success',
-          true,
-          201,
-        );
       }
+
+      const createdStaff = await this.entityManager.transaction(
+        async (manager) => {
+          const newStaff = this.staffRepository.create(staff);
+          await manager.save(newStaff);
+
+          shelter.staff.push(newStaff);
+          await manager.save(shelter);
+
+          return {
+            id: newStaff.id,
+            name: newStaff.name,
+            email: newStaff.email,
+            contact: newStaff.contact,
+          };
+        },
+      );
+
+      return generalResponse(
+        res,
+        createdStaff,
+        'Staff created successfully',
+        'success',
+        true,
+        201,
+      );
     } catch (error) {
+      console.error('Error creating staff:', error);
       return generalResponse(
         res,
         error,
