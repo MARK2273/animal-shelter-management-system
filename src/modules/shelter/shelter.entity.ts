@@ -1,4 +1,5 @@
 import { Animal } from '../animal/animal.entity';
+import { Donation } from '../donation/donation.entity';
 import { Staff } from '../staff/staff.entity';
 import {
   BaseEntity,
@@ -42,4 +43,9 @@ export class Shelter extends BaseEntity {
 
   @OneToMany(() => Animal, (animal) => animal.shelter)
   animals: Animal[];
+
+  @OneToMany(() => Donation, (donation) => donation.animal, {
+    onDelete: 'CASCADE',
+  })
+  donation: Donation[];
 }

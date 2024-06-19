@@ -7,6 +7,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -14,6 +15,7 @@ import {
 import { AnimalType } from '../animalType/animalType.entity';
 import { Breed } from '../breed/breed.entity';
 import { Shelter } from '../shelter/shelter.entity';
+import { Donation } from '../donation/donation.entity';
 
 export enum Gender {
   MALE = 'male',
@@ -67,4 +69,9 @@ export class Animal extends BaseEntity {
 
   @ManyToOne(() => Shelter, (shelter) => shelter.animals)
   shelter: Shelter;
+
+  @OneToMany(() => Donation, (donation) => donation.animal, {
+    onDelete: 'CASCADE',
+  })
+  donation: Donation[];
 }

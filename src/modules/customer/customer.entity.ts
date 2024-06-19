@@ -4,9 +4,11 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Donation } from '../donation/donation.entity';
 
 @Entity('customers')
 export class Customer extends BaseEntity {
@@ -36,4 +38,9 @@ export class Customer extends BaseEntity {
 
   @DeleteDateColumn({ type: 'timestamp' })
   deleted_at: Date;
+
+  @OneToMany(() => Donation, (donation) => donation.animal, {
+    onDelete: 'CASCADE',
+  })
+  donation: Donation[];
 }
