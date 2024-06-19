@@ -142,8 +142,6 @@ export class StaffService {
       if (validStaff) {
         await this.staffRepository.softDelete({ id: staffId });
 
-        ///delete data from pivot table also
-
         return generalResponse(
           res,
           '',
