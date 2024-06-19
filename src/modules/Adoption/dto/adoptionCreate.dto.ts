@@ -1,9 +1,17 @@
 import { IsNotEmpty, IsOptional } from 'class-validator';
 
-export class CreateDonationDto {
-  @IsNotEmpty({ message: 'Donation Information should not be empty ' })
+export enum Payment {
+  CASH = 'cash',
+  CARD = 'card',
+}
+
+export class CreateAdoptionDto {
+  @IsNotEmpty({ message: 'Adoption Information should not be empty ' })
   @IsOptional()
-  donation_info?: string;
+  adoption_info?: string;
+
+  @IsNotEmpty({ message: 'Payment Mode should not be empty ' })
+  payment_mode: Payment;
 
   @IsNotEmpty({ message: 'Date should not be empty ' })
   date: Date;

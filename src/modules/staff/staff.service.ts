@@ -64,7 +64,6 @@ export class StaffService {
         );
       }
     } catch (error) {
-      console.log(error);
       return generalResponse(
         res,
         error,

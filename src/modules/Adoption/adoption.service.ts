@@ -1,26 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import { DonationRepository } from './donation.repository';
-import { CreateDonationDto } from './dto/donationCreate.dto';
+import { AdoptionRepository } from './adoption.repository';
+import { CreateAdoptionDto } from './dto/adoptionCreate.dto';
 import { Response } from 'express';
 import generalResponse from 'src/helper/genrelResponse.helper';
+import { AnimalRepository } from '../animal/animal.repository';
 
 @Injectable()
-export class DonationService {
-  constructor(private donationRepository: DonationRepository) {}
+export class AdoptionService {
+  constructor(
+    private adoptionRepository: AdoptionRepository,
+    private animalRepository: AnimalRepository,
+  ) {}
 
-  async createDonation(donation: CreateDonationDto, res: Response) {
+  async createAdoption(adoption: CreateAdoptionDto, res: Response) {
     try {
-      if (donation.animal) {
-        donation = { ...donation, donation_info: 'animal' };
+      if (adoption.animal) {
+        adoption = { ...adoption, adoption_info: 'animal' };
+        await this.animalRepository.softDelete(adoption.animal.id);
       }
 
-      const result = this.donationRepository.create(donation);
-      const newDonation = await this.donationRepository.save(result);
+      const result = this.adoptionRepository.create(adoption);
+      const newAdoption = await this.adoptionRepository.save(result);
 
       return generalResponse(
         res,
-        newDonation,
-        'Donation created successfully',
+        newAdoption,
+        'Adoption created successfully',
         'success',
         true,
         201,
@@ -37,12 +42,13 @@ export class DonationService {
     }
   }
 
-  async getAllDonation(id: number) {
-    return this.donationRepository.find({
+  async getAllAdoption(id: number) {
+    return this.adoptionRepository.find({
       relations: ['customer', 'shelter', 'animal'],
       where: { shelter: { id } },
       select: {
-        donation_info: true,
+        adoption_info: true,
+        payment_mode: true,
         date: true,
         customer: {
           fname: true,

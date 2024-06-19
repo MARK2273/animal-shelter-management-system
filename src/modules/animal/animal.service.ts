@@ -65,7 +65,6 @@ export class AnimalService {
       animalDescription.animal = newAnimal;
       await animalDescription.save();
 
-      console.log(shelter);
       shelter.animals = [...shelter.animals, newAnimal];
       await shelter.save();
 
@@ -78,7 +77,6 @@ export class AnimalService {
         201,
       );
     } catch (error) {
-      console.log(error);
       return generalResponse(
         res,
         error,
@@ -167,7 +165,6 @@ export class AnimalService {
         );
       }
     } catch (error) {
-      console.log(error);
       return generalResponse(
         res,
         error,

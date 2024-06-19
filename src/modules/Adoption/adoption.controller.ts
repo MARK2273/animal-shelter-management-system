@@ -6,23 +6,22 @@ import {
   UsePipes,
   ValidationPipe,
   Res,
-  Param,
   Get,
+  Param,
 } from '@nestjs/common';
 import { Response } from 'express';
 
-import { DonationService } from './donation.service';
-import { CreateDonationDto } from './dto/donationCreate.dto';
+import { AdoptionService } from './adoption.service';
+import { CreateAdoptionDto } from './dto/adoptionCreate.dto';
 import { AnimalService } from '../animal/animal.service';
-// import generalResponse from 'src/helper/genrelResponse.helper';
 import { CustomerService } from '../customer/customer.service';
 import { ShelterService } from '../shelter/shelter.service';
 import generalResponse from 'src/helper/genrelResponse.helper';
 
-@Controller('donation')
-export class DonationController {
+@Controller('adoption')
+export class adoptionController {
   constructor(
-    private donationService: DonationService,
+    private adoptionService: AdoptionService,
     private animalService: AnimalService,
     private customerservice: CustomerService,
     private shelterService: ShelterService,
@@ -30,18 +29,18 @@ export class DonationController {
 
   @Get('/get/:shelterId')
   async getMedicationsByBreedId(@Param('shelterId') shelterId: number) {
-    return this.donationService.getAllDonation(shelterId);
+    return this.adoptionService.getAllAdoption(shelterId);
   }
 
   @Post('/create')
   @HttpCode(200)
   @UsePipes(ValidationPipe)
-  async createDonation(
-    @Body() donationData: CreateDonationDto,
+  async createAdoption(
+    @Body() adoptionData: CreateAdoptionDto,
     @Res() res: Response,
   ) {
     const customer = await this.customerservice.findCustomerById(
-      +donationData.customer.id,
+      +adoptionData.customer.id,
     );
 
     if (!customer) {
@@ -49,7 +48,7 @@ export class DonationController {
     }
 
     const shelter = await this.shelterService.findShelterId(
-      +donationData.shelter.id,
+      +adoptionData.shelter.id,
     );
 
     if (!shelter) {
@@ -57,19 +56,19 @@ export class DonationController {
     }
 
     let animal;
-    if (donationData.animal) {
-      animal = await this.animalService.findAnimalId(+donationData.animal.id);
+    if (adoptionData.animal) {
+      animal = await this.animalService.findAnimalId(+adoptionData.animal.id);
     }
 
-    if (donationData.animal && !animal) {
+    if (adoptionData.animal && !animal) {
       return generalResponse(res, '', 'No Animal Found', 'error', true, 400);
     }
 
-    if (!donationData.animal) {
-      return await this.donationService.createDonation(donationData, res);
+    if (!adoptionData.animal) {
+      return await this.adoptionService.createAdoption(adoptionData, res);
     }
-    return await this.donationService.createDonation(
-      { ...donationData, donation_info: 'animal' },
+    return await this.adoptionService.createAdoption(
+      { ...adoptionData, adoption_info: 'animal' },
       res,
     );
   }

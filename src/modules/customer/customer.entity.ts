@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Donation } from '../donation/donation.entity';
+import { Adoption } from '../Adoption/adoption.entity';
 
 @Entity('customers')
 export class Customer extends BaseEntity {
@@ -43,4 +44,9 @@ export class Customer extends BaseEntity {
     cascade: true,
   })
   donation: Donation[];
+
+  @OneToMany(() => Adoption, (adoption) => adoption.animal, {
+    cascade: true,
+  })
+  adoption: Adoption[];
 }

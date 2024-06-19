@@ -10,6 +10,7 @@ import { AnimalDescriptionModule } from './modules/animalDescription/animalDescr
 import { AnimalModule } from './modules/animal/animal.module';
 import { StaffModule } from './modules/staff/staff.module';
 import { DonationModule } from './modules/donation/donation.module';
+import { AdoptionModule } from './modules/Adoption/adoption.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { DonationModule } from './modules/donation/donation.module';
     BreedModule,
     StaffModule,
     DonationModule,
+    AdoptionModule,
   ],
 })
 export class AppModule {}
