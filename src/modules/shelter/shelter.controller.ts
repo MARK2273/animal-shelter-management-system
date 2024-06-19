@@ -19,12 +19,18 @@ import {
 } from './dto/createShelter.dto';
 import { ShelterResponseDto } from './dto/shelterResponse.dto';
 import { UpdateShelterDto } from './dto/shelterUpdate.dto';
+import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
 
 @Controller('shelter')
 export class ShelterController {
   constructor(private shelterService: ShelterService) {}
 
   @Post('/create')
+  @ApiTags('Shelter')
+  @ApiConsumes('application/x-www-form-urlencoded')
+  @ApiBody({
+    type: CreateShelterDto,
+  })
   @HttpCode(200)
   @UsePipes(ValidationPipe)
   async createCustomer(
@@ -35,6 +41,11 @@ export class ShelterController {
   }
 
   @Post('/createwithstaff')
+  @ApiTags('Shelter')
+  @ApiConsumes('application/json')
+  @ApiBody({
+    type: CreateShelterWithStaffDto,
+  })
   async createShelterWithStaff(
     @Body() createShelterWithDto: CreateShelterWithStaffDto,
   ): Promise<ShelterResponseDto> {
@@ -42,6 +53,11 @@ export class ShelterController {
   }
 
   @Put('/update/:id')
+  @ApiTags('Shelter')
+  @ApiConsumes('application/x-www-form-urlencoded')
+  @ApiBody({
+    type: UpdateShelterDto,
+  })
   async updateShelter(
     @Param('id') id: number,
     @Body() updateShelterDto: UpdateShelterDto,
@@ -51,6 +67,11 @@ export class ShelterController {
   }
 
   @Delete('/delete/:id')
+  @ApiTags('Shelter')
+  @ApiConsumes('application/x-www-form-urlencoded')
+  @ApiParam({
+    name: 'id',
+  })
   async deleteShelter(
     @Param() id: number,
     @Res() res: Response,

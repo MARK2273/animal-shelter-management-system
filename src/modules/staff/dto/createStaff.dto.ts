@@ -7,6 +7,7 @@ import {
   MinLength,
 } from 'class-validator';
 import { Position } from '../staff.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateStaffDto {
   @IsNotEmpty({ message: 'Name should not be empty ' })
@@ -33,19 +34,34 @@ export class CreateStaffDto {
 export class CreateStaffWithShelterDto {
   @IsString()
   @IsNotEmpty()
+  @ApiProperty({
+    required: true,
+  })
   name: string;
 
   @IsEnum(Position)
+  @ApiProperty({
+    required: true,
+  })
   position: Position;
 
   @IsEmail()
+  @ApiProperty({
+    required: true,
+  })
   email: string;
 
   @IsString()
   @IsNotEmpty()
+  @ApiProperty({
+    required: true,
+  })
   password: string;
 
   @IsString()
   @IsNotEmpty()
+  @ApiProperty({
+    required: true,
+  })
   contact: string;
 }

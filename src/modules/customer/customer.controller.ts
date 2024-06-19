@@ -12,17 +12,24 @@ import { Response } from 'express';
 
 import { CustomerService } from './customer.service';
 import { CreateCustomerDto } from './dto/CreateCustomer.dto';
+import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
 @Controller('customer')
 export class CustomerController {
   constructor(private customerService: CustomerService) {}
 
   @Get('/getallcustomers')
+  @ApiTags('Customer')
   getAllCustomer() {
     return this.customerService.getAllCustomer();
   }
 
   @Post('/create')
+  @ApiTags('Customer')
+  @ApiConsumes('application/x-www-form-urlencoded')
+  @ApiBody({
+    type: CreateCustomerDto,
+  })
   @HttpCode(200)
   @UsePipes(ValidationPipe)
   async createCustomer(

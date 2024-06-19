@@ -8,8 +8,16 @@ import generalResponse from 'src/helper/genrelResponse.helper';
 export class CustomerService {
   constructor(private customerRepository: CustomerRepository) {}
 
-  getAllCustomer() {
-    return [1, 2, 3, 'from service'];
+  async getAllCustomer() {
+    return this.customerRepository.find({
+      select: {
+        fname: true,
+        lname: true,
+        email: true,
+        contact: true,
+        address: true,
+      },
+    });
   }
 
   async createCustomer(customer: CreateCustomerDto, res: Response) {

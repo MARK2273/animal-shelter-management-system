@@ -133,14 +133,12 @@ export class ShelterService {
         }
       }
 
-      // Soft delete the animals
       if (shelter.animals && shelter.animals.length > 0) {
         for (const animal of shelter.animals) {
           await this.animalRepository.softDelete(animal.id);
         }
       }
 
-      // Soft delete the shelter
       await this.shelterRepository.softDelete(id);
       return generalResponse(
         res,

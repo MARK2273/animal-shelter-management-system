@@ -5,14 +5,16 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const config = new DocumentBuilder()
-    .setTitle('Animal Shelter Management System')
-    .setDescription('The cats API description')
+  const options = new DocumentBuilder()
+    .setTitle('Animal Shelter')
+    .setDescription('Animal Shelter Mangement System')
     .setVersion('1.0')
+    .addServer('http://localhost:3000')
     .build();
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup('api-docs', app, document);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3000);
+  await app.listen(process.env.PORT || 3000);
 }
 bootstrap();
