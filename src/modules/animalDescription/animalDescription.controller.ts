@@ -16,18 +16,25 @@ import { Response } from 'express';
 import { AnimalDescriptionService } from './animalDescription.service';
 import { CreateAnimalDescriptionDto } from './dto/animalDescription.dto';
 import { UpdateAnimalDescriptionDto } from './dto/animalDescriptionUpdate.dto';
+import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
 
 @Controller('animaldescription')
 export class AnimalDescriptionController {
   constructor(private animalDescriptionService: AnimalDescriptionService) {}
 
   @Get('/getall')
+  @ApiTags('Animal Description')
   async getAllMedications() {
     return this.animalDescriptionService.getAllAnimalDescription();
   }
 
   @Post('/create')
   @HttpCode(200)
+  @ApiTags('Animal Description')
+  @ApiConsumes('application/x-www-form-urlencoded')
+  @ApiBody({
+    type: CreateAnimalDescriptionDto,
+  })
   @UsePipes(ValidationPipe)
   async createAnimalDescription(
     @Body() animalDescriptionData: CreateAnimalDescriptionDto,
@@ -40,6 +47,11 @@ export class AnimalDescriptionController {
   }
 
   @Put('/update/:id')
+  @ApiTags('Animal Description')
+  @ApiConsumes('application/x-www-form-urlencoded')
+  @ApiBody({
+    type: UpdateAnimalDescriptionDto,
+  })
   async update(
     @Param('id') id: number,
     @Body() updateAnimalDescriptionDto: UpdateAnimalDescriptionDto,
@@ -53,7 +65,12 @@ export class AnimalDescriptionController {
   }
 
   @Delete('/delete/:id')
-  async deleteMedication(@Param() id: number, @Res() res: Response) {
+  @ApiTags('Animal Description')
+  @ApiConsumes('application/x-www-form-urlencoded')
+  @ApiParam({
+    name: 'id',
+  })
+  async deleteAnimalDescription(@Param() id: number, @Res() res: Response) {
     return await this.animalDescriptionService.deleteAnimalDescription(id, res);
   }
 }
