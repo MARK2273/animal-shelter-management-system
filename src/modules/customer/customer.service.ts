@@ -63,4 +63,12 @@ export class CustomerService {
     });
     return customer;
   }
+
+  async findCustomerById(id: number) {
+    const customer = await this.customerRepository.findOne({
+      where: { id },
+      relations: ['donation'],
+    });
+    return customer;
+  }
 }

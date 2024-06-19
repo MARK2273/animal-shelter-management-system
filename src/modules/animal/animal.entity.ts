@@ -71,7 +71,7 @@ export class Animal extends BaseEntity {
   shelter: Shelter;
 
   @OneToMany(() => Donation, (donation) => donation.animal, {
-    onDelete: 'CASCADE',
+    cascade: true,
   })
   donation: Donation[];
 }

@@ -56,7 +56,6 @@ export class AnimalController {
     const shelter = await this.shelterService.findShelterId(
       customerData.shelterId,
     );
-    console.log(shelter);
 
     if (breed && animalType && animalDescription && shelter) {
       return await this.animalService.createAnimal(

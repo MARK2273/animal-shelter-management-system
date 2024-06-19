@@ -5,6 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DonationRepository } from './donation.repository';
 import { AnimalRepository } from '../animal/animal.repository';
 import { AnimalService } from '../animal/animal.service';
+import { CustomerService } from '../customer/customer.service';
+import { CustomerRepository } from '../customer/customer.repository';
+import { ShelterService } from '../shelter/shelter.service';
+import { ShelterRepository } from '../shelter/shelter.repository';
+import { StaffRepository } from '../staff/staff.repository';
+import { StaffService } from '../staff/staff.service';
 
 @Module({
   controllers: [DonationController],
@@ -13,7 +19,21 @@ import { AnimalService } from '../animal/animal.service';
     DonationService,
     AnimalRepository,
     AnimalService,
+    CustomerService,
+    CustomerRepository,
+    ShelterService,
+    ShelterRepository,
+    StaffRepository,
+    StaffService,
   ],
-  imports: [TypeOrmModule.forFeature([DonationRepository, AnimalRepository])],
+  imports: [
+    TypeOrmModule.forFeature([
+      DonationRepository,
+      AnimalRepository,
+      CustomerRepository,
+      ShelterRepository,
+      StaffRepository,
+    ]),
+  ],
 })
 export class DonationModule {}

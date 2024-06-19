@@ -40,7 +40,7 @@ export class Customer extends BaseEntity {
   deleted_at: Date;
 
   @OneToMany(() => Donation, (donation) => donation.animal, {
-    onDelete: 'CASCADE',
+    cascade: true,
   })
   donation: Donation[];
 }

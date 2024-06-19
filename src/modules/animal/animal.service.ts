@@ -182,6 +182,7 @@ export class AnimalService {
   async findAnimalId(id: number) {
     const data = await this.animalRepository.findOne({
       where: { id: +id },
+      relations: ['donation'],
     });
     return data;
   }

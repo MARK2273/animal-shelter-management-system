@@ -35,11 +35,13 @@ export class Donation extends BaseEntity {
 
   @ManyToOne(() => Animal, (animal) => animal.donation)
   @JoinColumn()
-  animal: Animal;
+  animal?: Animal;
 
   @ManyToOne(() => Customer, (customer) => customer.donation)
+  @JoinColumn()
   customer: Customer;
 
   @ManyToOne(() => Shelter, (shelter) => shelter.donation)
+  @JoinColumn()
   shelter: Shelter;
 }
