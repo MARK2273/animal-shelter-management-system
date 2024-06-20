@@ -15,19 +15,25 @@ import { ShelterService } from '../shelter/shelter.service';
 import { StaffRepository } from '../staff/staff.repository';
 import { StaffModule } from '../staff/staff.module';
 import { StaffService } from '../staff/staff.service';
+import { Animal } from './animal.entity';
+import { Breed } from '../breed/breed.entity';
+import { Medication } from '../medication/medication.entity';
+import { AnimalType } from '../animalType/animalType.entity';
+import { AnimalDescription } from '../animalDescription/animalDescription.entity';
+import { Shelter } from '../shelter/shelter.entity';
+import { Staff } from '../staff/staff.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      AnimalRepository,
-      BreedRepository,
-      MedicationRepository,
-      AnimalTypeRepository,
-      AnimalDescriptionRepository,
-      ShelterRepository,
-      StaffRepository,
+      Animal,
+      Breed,
+      Medication,
+      AnimalType,
+      AnimalDescription,
+      Shelter,
+      Staff,
     ]),
-    StaffModule,
   ],
   providers: [
     AnimalRepository,
@@ -42,6 +48,7 @@ import { StaffService } from '../staff/staff.service';
     ShelterRepository,
     ShelterService,
     StaffService,
+    StaffRepository,
   ],
   controllers: [AnimalController],
 })

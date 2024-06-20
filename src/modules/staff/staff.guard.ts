@@ -2,8 +2,10 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { config } from 'dotenv';
 import { Request } from 'express';
-import { StaffService } from './staff.service';
 import { Staff } from './staff.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { StaffRepository } from './staff.repository';
 config();
 
 const key: string = process.env.SECRET_KEY;
@@ -12,7 +14,7 @@ const key: string = process.env.SECRET_KEY;
 export class AuthGaurd implements CanActivate {
   constructor(
     private jwtService: JwtService,
-    private staffService: StaffService,
+    private staffRepository: StaffRepository,
   ) {}
 
   private extractToken(req: Request): string | undefined {
@@ -31,10 +33,11 @@ export class AuthGaurd implements CanActivate {
         const payload = await this.jwtService.verifyAsync(token, {
           secret: key,
         });
-        const data: Staff = await this.staffService.findStaffByEmail(
-          payload.email,
-        );
-        console.log(data);
+        console.log(payload);
+        const data: Staff = await this.staffRepository.findOne({
+          where: { email: payload.email },
+        });
+        console.log(data, '.....................');
 
         if (data) {
           request['user'] = data;

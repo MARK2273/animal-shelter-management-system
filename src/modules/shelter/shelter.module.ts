@@ -10,7 +10,6 @@ import { AnimalService } from '../animal/animal.service';
 import { Shelter } from './shelter.entity';
 import { Staff } from '../staff/staff.entity';
 import { Animal } from '../animal/animal.entity';
-import { StaffModule } from '../staff/staff.module';
 
 @Module({
   controllers: [ShelterController],
@@ -24,9 +23,6 @@ import { StaffModule } from '../staff/staff.module';
     StaffService,
     StaffRepository,
   ],
-  imports: [
-    TypeOrmModule.forFeature([Shelter, Staff, Animal, StaffRepository]),
-    StaffModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Shelter, Staff, Animal])],
 })
 export class ShelterModule {}

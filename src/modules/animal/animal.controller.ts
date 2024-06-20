@@ -11,7 +11,7 @@ import {
   Put,
   Param,
   Delete,
-  // UseGuards,
+  UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -35,7 +35,7 @@ import { AnimalType } from '../animalType/animalType.entity';
 import { AnimalDescription } from '../animalDescription/animalDescription.entity';
 import { Shelter } from '../shelter/shelter.entity';
 import { Animal } from './animal.entity';
-// import { AuthGaurd } from '../staff/staff.guard';
+import { AuthGaurd } from '../staff/staff.guard';
 
 @Controller('animal')
 export class AnimalController {
@@ -53,7 +53,7 @@ export class AnimalController {
     return this.animalService.getAllAnimals();
   }
 
-  // @UseGuards(AuthGaurd)
+  @UseGuards(AuthGaurd)
   @ApiBearerAuth()
   @Post('/create')
   @HttpCode(200)
@@ -101,7 +101,7 @@ export class AnimalController {
     }
   }
 
-  // @UseGuards(AuthGaurd)
+  @UseGuards(AuthGaurd)
   @ApiBearerAuth()
   @Put('/update/:id')
   @ApiTags('Animal')
@@ -118,7 +118,7 @@ export class AnimalController {
     return this.animalService.updateAnimal(id, updateAnimalDto, res);
   }
 
-  // @UseGuards(AuthGaurd)
+  @UseGuards(AuthGaurd)
   @ApiBearerAuth()
   @Delete('/delete/:id')
   @ApiTags('Animal')

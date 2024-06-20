@@ -15,6 +15,5 @@ export class CreateAnimalDescriptionDto {
     example: '2024-06-30',
   })
   @IsNotEmpty({ message: 'Special day should not be empty' })
-  @IsDate()
   special_day: Date;
 }

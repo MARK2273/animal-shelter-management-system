@@ -3,8 +3,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AnimalDescriptionController } from './animalDescription.controller';
 import { AnimalDescriptionService } from './animalDescription.service';
 import { AnimalDescriptionRepository } from './animalDescription.repository';
-import { StaffModule } from '../staff/staff.module';
 import { StaffService } from '../staff/staff.service';
+import { AnimalDescription } from './animalDescription.entity';
+import { Staff } from '../staff/staff.entity';
 import { StaffRepository } from '../staff/staff.repository';
 
 @Module({
@@ -13,10 +14,8 @@ import { StaffRepository } from '../staff/staff.repository';
     AnimalDescriptionRepository,
     AnimalDescriptionService,
     StaffService,
+    StaffRepository,
   ],
-  imports: [
-    TypeOrmModule.forFeature([AnimalDescriptionRepository, StaffRepository]),
-    StaffModule,
-  ],
+  imports: [TypeOrmModule.forFeature([AnimalDescription, Staff])],
 })
 export class AnimalDescriptionModule {}

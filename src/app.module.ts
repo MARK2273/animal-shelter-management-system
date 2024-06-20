@@ -11,6 +11,7 @@ import { AnimalModule } from './modules/animal/animal.module';
 import { StaffModule } from './modules/staff/staff.module';
 import { DonationModule } from './modules/donation/donation.module';
 import { AdoptionModule } from './modules/Adoption/adoption.module';
+import { typeOrmConfig } from './config/typeorm.config';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { AdoptionModule } from './modules/Adoption/adoption.module';
       }),
       inject: [ConfigService],
     }),
+
     CustomerModule,
     ShelterModule,
     AnimalTypeModule,

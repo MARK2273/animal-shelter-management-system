@@ -5,8 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { MedicationRepository } from './medication.repository';
 import { BreedRepository } from '../breed/breed.repository';
 import { BreedService } from '../breed/breed.service';
-import { StaffModule } from '../staff/staff.module';
 import { StaffService } from '../staff/staff.service';
+import { Medication } from './medication.entity';
+import { Breed } from '../breed/breed.entity';
+import { Staff } from '../staff/staff.entity';
 import { StaffRepository } from '../staff/staff.repository';
 
 @Module({
@@ -17,14 +19,8 @@ import { StaffRepository } from '../staff/staff.repository';
     BreedService,
     BreedRepository,
     StaffService,
+    StaffRepository,
   ],
-  imports: [
-    TypeOrmModule.forFeature([
-      MedicationRepository,
-      BreedRepository,
-      StaffRepository,
-    ]),
-    StaffModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Medication, Breed, Staff])],
 })
 export class MedicationModule {}

@@ -43,6 +43,5 @@ export class BreedWithMedicationDto {
     required: true,
   })
   @IsNotEmpty({ message: 'Vaccination Date should not be empty' })
-  @IsDate()
   vaccination_date: Date;
 }

@@ -111,14 +111,14 @@ export class MedicationService {
               allergie: string;
               veterinarian: string;
               vaccination_date: Date;
-            } & Medication = await manager.save(Medication, {
+            } & Medication = manager.create(Medication, {
               allergie: medication.allergie,
               veterinarian: medication.veterinarian,
               vaccination_date: medication.vaccination_date,
             });
 
-            breed.medication = [...breed.medication, newMedication];
-            await manager.save(breed);
+            newMedication.breed = breed;
+            await manager.save(newMedication);
             const createdMedication: {
               id: number;
               Allergie: string;

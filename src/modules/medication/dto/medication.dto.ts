@@ -21,7 +21,6 @@ export class MedicationDto {
     example: '2024-06-19',
   })
   @IsNotEmpty({ message: 'Vaccination Date should not be empty' })
-  @IsDateString({}, { message: 'Vaccination Date must be a valid date string' })
   vaccination_date: Date;
 
   @ApiProperty({
@@ -29,6 +28,5 @@ export class MedicationDto {
     example: 1,
   })
   @IsNotEmpty({ message: 'Breed Id should not be empty' })
-  @IsNumber({}, { message: 'Breed Id must be a number' })
   breedId: number;
 }
