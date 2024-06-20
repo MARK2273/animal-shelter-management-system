@@ -15,6 +15,7 @@ export class DonationService {
       }
 
       const result = this.donationRepository.create(donation);
+      console.log(result);
       const newDonation = await this.donationRepository.save(result);
 
       return generalResponse(
@@ -26,6 +27,7 @@ export class DonationService {
         201,
       );
     } catch (error) {
+      console.log(error);
       return generalResponse(
         res,
         error,

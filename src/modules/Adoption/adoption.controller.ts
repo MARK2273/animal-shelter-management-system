@@ -17,6 +17,7 @@ import { AnimalService } from '../animal/animal.service';
 import { CustomerService } from '../customer/customer.service';
 import { ShelterService } from '../shelter/shelter.service';
 import generalResponse from 'src/helper/genrelResponse.helper';
+import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
 
 @Controller('adoption')
 export class adoptionController {
@@ -28,12 +29,22 @@ export class adoptionController {
   ) {}
 
   @Get('/get/:shelterId')
+  @ApiTags('Adoption')
+  @ApiConsumes('application/x-www-form-urlencoded')
+  @ApiParam({
+    name: 'shelterId',
+  })
   async getMedicationsByBreedId(@Param('shelterId') shelterId: number) {
     return this.adoptionService.getAllAdoption(shelterId);
   }
 
   @Post('/create')
   @HttpCode(200)
+  @ApiTags('Adoption')
+  @ApiConsumes('application/json')
+  @ApiBody({
+    type: CreateAdoptionDto,
+  })
   @UsePipes(ValidationPipe)
   async createAdoption(
     @Body() adoptionData: CreateAdoptionDto,

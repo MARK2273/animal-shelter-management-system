@@ -6,7 +6,6 @@ import generalResponse from 'src/helper/genrelResponse.helper';
 import { BreedRepository } from '../breed/breed.repository';
 import { Breed } from '../breed/breed.entity';
 import { UpdateMedicationDto } from './dto/medicationUpdate.dto';
-import { Medication } from './medication.entity';
 
 @Injectable()
 export class MedicationService {
@@ -15,8 +14,8 @@ export class MedicationService {
     private breedRepository: BreedRepository,
   ) {}
 
-  async getMedicationsByBreedId(breedId: number): Promise<Medication[]> {
-    return this.medicationRepository.find({
+  async getMedicationsByBreedId(breedId: number, res: Response) {
+    const medication = await this.medicationRepository.find({
       where: { breed: { id: breedId } },
       select: {
         allergie: true,
@@ -28,11 +27,30 @@ export class MedicationService {
       },
       relations: ['breed'],
     });
+
+    if (medication.length > 0) {
+      return generalResponse(
+        res,
+        medication,
+        'All Medication',
+        'error',
+        true,
+        400,
+      );
+    } else {
+      return generalResponse(
+        res,
+        [],
+        'No medication found',
+        'error',
+        true,
+        400,
+      );
+    }
   }
 
-  async getAllMedications(): Promise<Medication[]> {
-    return this.medicationRepository.find({
-      relations: ['breed'],
+  async getAllMedications(res) {
+    const medication = await this.medicationRepository.find({
       select: {
         allergie: true,
         veterinarian: true,
@@ -41,7 +59,28 @@ export class MedicationService {
           name: true,
         },
       },
+      relations: ['breed'],
     });
+
+    if (medication.length > 0) {
+      return generalResponse(
+        res,
+        medication,
+        'All Medication',
+        'error',
+        true,
+        400,
+      );
+    } else {
+      return generalResponse(
+        res,
+        [],
+        'No medication found',
+        'error',
+        true,
+        400,
+      );
+    }
   }
 
   async createMedication(

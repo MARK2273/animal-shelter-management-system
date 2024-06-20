@@ -17,6 +17,7 @@ import { StaffService } from './staff.service';
 import { CreateStaffDto } from './dto/createStaff.dto';
 import { ShelterService } from '../shelter/shelter.service';
 import { UpdateStaffDto } from './dto/staffUpdate.dto';
+import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
 
 @Controller('staff')
 export class StaffController {
@@ -26,12 +27,22 @@ export class StaffController {
   ) {}
 
   @Get('/getall/:id')
+  @ApiTags('Staff')
+  @ApiConsumes('application/x-www-form-urlencoded')
+  @ApiParam({
+    name: 'id',
+  })
   async getAllStaff(@Param('id') id: number) {
     return this.staffService.getStaffByShelterId(id);
   }
 
   @Post('/create')
   @HttpCode(200)
+  @ApiTags('Staff')
+  @ApiConsumes('application/x-www-form-urlencoded')
+  @ApiBody({
+    type: CreateStaffDto,
+  })
   @UsePipes(ValidationPipe)
   async createStaff(@Body() staffData: CreateStaffDto, @Res() res: Response) {
     const shelter = await this.shelterService.findShelterId(
@@ -42,6 +53,11 @@ export class StaffController {
   }
 
   @Put('/update/:id')
+  @ApiTags('Staff')
+  @ApiConsumes('application/x-www-form-urlencoded')
+  @ApiBody({
+    type: UpdateStaffDto,
+  })
   async updateMedication(
     @Param('id') id: number,
     @Body() updateStaffDto: UpdateStaffDto,
@@ -51,7 +67,12 @@ export class StaffController {
   }
 
   @Delete('/delete/:id')
-  async deleteMedication(@Param() id: number, @Res() res: Response) {
+  @ApiTags('Staff')
+  @ApiConsumes('application/x-www-form-urlencoded')
+  @ApiParam({
+    name: 'id',
+  })
+  async deleteStaff(@Param() id: number, @Res() res: Response) {
     return await this.staffService.deleteStaff(id, res);
   }
 }

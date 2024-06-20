@@ -11,6 +11,7 @@ import { Response } from 'express';
 
 import { AnimalTypeService } from './animalType.service';
 import { AnimalTypeDto } from './dto/animalType.dto';
+import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
 @Controller('animalType')
 export class AnimalTypeController {
@@ -18,6 +19,11 @@ export class AnimalTypeController {
 
   @Post('/create')
   @HttpCode(200)
+  @ApiTags('AnimalType')
+  @ApiConsumes('application/x-www-form-urlencoded')
+  @ApiBody({
+    type: AnimalTypeDto,
+  })
   @UsePipes(ValidationPipe)
   async createAnimalType(
     @Body() animalTypeData: AnimalTypeDto,

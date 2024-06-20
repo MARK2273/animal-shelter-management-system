@@ -22,6 +22,7 @@ import { AnimalTypeService } from '../animalType/animalType.service';
 import { AnimalDescriptionService } from '../animalDescription/animalDescription.service';
 import { UpdateAnimalDto } from './dto/animalUpdate.dto';
 import { ShelterService } from '../shelter/shelter.service';
+import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
 
 @Controller('animal')
 export class AnimalController {
@@ -34,12 +35,18 @@ export class AnimalController {
   ) {}
 
   @Get('/getall')
+  @ApiTags('Animal')
   getAllCustomer() {
     return this.animalService.getAllAnimals();
   }
 
   @Post('/create')
   @HttpCode(200)
+  @ApiTags('Animal')
+  @ApiConsumes('application/x-www-form-urlencoded')
+  @ApiBody({
+    type: CreateAnimalDto,
+  })
   @UsePipes(ValidationPipe)
   async createCustomer(
     @Body() customerData: CreateAnimalDto,
@@ -79,15 +86,26 @@ export class AnimalController {
   }
 
   @Put('/update/:id')
+  @ApiTags('Animal')
+  @ApiConsumes('application/x-www-form-urlencoded')
+  @ApiBody({
+    type: UpdateAnimalDto,
+  })
   async updateAnimal(
     @Param('id') id: number,
     @Body() updateAnimalDto: UpdateAnimalDto,
+
     @Res() res: Response,
   ) {
     return this.animalService.updateAnimal(id, updateAnimalDto, res);
   }
 
   @Delete('/delete/:id')
+  @ApiTags('Animal')
+  @ApiConsumes('application/x-www-form-urlencoded')
+  @ApiParam({
+    name: 'id',
+  })
   async deleteAnimal(@Param() id: number, @Res() res: Response) {
     return await this.animalService.deleteAnimal(id, res);
   }

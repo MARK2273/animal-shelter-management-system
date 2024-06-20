@@ -18,6 +18,7 @@ import { MedicationDto } from './dto/medication.dto';
 import { BreedService } from '../breed/breed.service';
 import generalResponse from 'src/helper/genrelResponse.helper';
 import { UpdateMedicationDto } from './dto/medicationUpdate.dto';
+import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
 
 @Controller('medication')
 export class MedicationController {
@@ -27,17 +28,31 @@ export class MedicationController {
   ) {}
 
   @Get('/get/:breedId')
-  async getMedicationsByBreedId(@Param('breedId') breedId: number) {
-    return this.medicationService.getMedicationsByBreedId(breedId);
+  @ApiTags('Medication')
+  @ApiConsumes('application/x-www-form-urlencoded')
+  @ApiParam({
+    name: 'breedId',
+  })
+  async getMedicationsByBreedId(
+    @Param('breedId') breedId: number,
+    @Res() res: Response,
+  ) {
+    return this.medicationService.getMedicationsByBreedId(breedId, res);
   }
 
   @Get('/getall')
-  async getAllMedications() {
-    return this.medicationService.getAllMedications();
+  @ApiTags('Medication')
+  async getAllMedications(@Res() res: Response) {
+    return this.medicationService.getAllMedications(res);
   }
 
   @Post('/create')
   @HttpCode(200)
+  @ApiTags('Medication')
+  @ApiConsumes('application/x-www-form-urlencoded')
+  @ApiBody({
+    type: MedicationDto,
+  })
   @UsePipes(ValidationPipe)
   async createMedication(
     @Body() medicationData: MedicationDto,
@@ -56,6 +71,11 @@ export class MedicationController {
   }
 
   @Put('/update/:id')
+  @ApiTags('Medication')
+  @ApiConsumes('application/x-www-form-urlencoded')
+  @ApiBody({
+    type: UpdateMedicationDto,
+  })
   async updateMedication(
     @Param('id') id: number,
     @Body() updateMedicationDto: UpdateMedicationDto,
@@ -69,6 +89,11 @@ export class MedicationController {
   }
 
   @Delete('/delete/:breedId')
+  @ApiTags('Medication')
+  @ApiConsumes('application/x-www-form-urlencoded')
+  @ApiParam({
+    name: 'breedId',
+  })
   async deleteMedication(@Param() breedId: number, @Res() res: Response) {
     return await this.medicationService.deleteMedication(breedId, res);
   }
