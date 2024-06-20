@@ -55,29 +55,46 @@ export class Animal extends BaseEntity {
   @DeleteDateColumn({ type: 'timestamp' })
   deleted_at: Date;
 
-  @ManyToOne(() => AnimalType, (animalType) => animalType.animal)
+  @ManyToOne(
+    (): typeof AnimalType => AnimalType,
+    (animalType: AnimalType): Animal[] => animalType.animal,
+  )
   animalType: AnimalType;
 
-  @ManyToOne(() => Breed, (breed) => breed.animal)
+  @ManyToOne(
+    (): typeof Breed => Breed,
+    (breed: Breed): Animal[] => breed.animal,
+  )
   breed: Breed;
 
   @OneToOne(
-    () => AnimalDescription,
-    (animalDescription) => animalDescription.animal,
+    (): typeof AnimalDescription => AnimalDescription,
+    (animalDescription: AnimalDescription): Animal => animalDescription.animal,
   )
   @JoinColumn()
   animalDescription: AnimalDescription;
 
-  @ManyToOne(() => Shelter, (shelter) => shelter.animals)
+  @ManyToOne(
+    (): typeof Shelter => Shelter,
+    (shelter: Shelter): Animal[] => shelter.animals,
+  )
   shelter: Shelter;
 
-  @OneToMany(() => Donation, (donation) => donation.animal, {
-    cascade: true,
-  })
+  @OneToMany(
+    (): typeof Donation => Donation,
+    (donation: Donation): Animal => donation.animal,
+    {
+      cascade: true,
+    },
+  )
   donation: Donation[];
 
-  @OneToMany(() => Adoption, (adoption) => adoption.animal, {
-    cascade: true,
-  })
+  @OneToMany(
+    (): typeof Adoption => Adoption,
+    (adoption: Adoption): Animal => adoption.animal,
+    {
+      cascade: true,
+    },
+  )
   adoption: Adoption[];
 }

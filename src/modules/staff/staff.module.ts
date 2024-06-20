@@ -7,7 +7,10 @@ import { ShelterRepository } from '../shelter/shelter.repository';
 import { ShelterService } from '../shelter/shelter.service';
 import { AnimalRepository } from '../animal/animal.repository';
 import { AnimalService } from '../animal/animal.service';
-import { Animal } from '../animal/animal.entity';
+import { JwtModule } from '@nestjs/jwt';
+import { configDotenv } from 'dotenv';
+configDotenv();
+const key: string = process.env.SECRET_KEY;
 
 @Module({
   controllers: [StaffController],
@@ -25,6 +28,8 @@ import { Animal } from '../animal/animal.entity';
       ShelterRepository,
       AnimalRepository,
     ]),
+    JwtModule.register({ global: true, secret: key }),
   ],
+  exports: [StaffService],
 })
 export class StaffModule {}

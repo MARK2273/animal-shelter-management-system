@@ -1,5 +1,6 @@
 import {
   BaseEntity,
+  BeforeInsert,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -9,6 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Shelter } from '../shelter/shelter.entity';
+import { hash } from 'argon2';
 
 export enum Position {
   OWNER = 'owner',
@@ -44,6 +46,14 @@ export class Staff extends BaseEntity {
   @DeleteDateColumn({ type: 'timestamp' })
   deleted_at: Date;
 
-  @ManyToMany(() => Shelter, (shelter) => shelter.staff)
+  @ManyToMany(
+    (): typeof Shelter => Shelter,
+    (shelter: Shelter): Staff[] => shelter.staff,
+  )
   shelter: Shelter[];
+
+  @BeforeInsert()
+  public async hashpass(): Promise<void> {
+    this.password = await hash(this.password);
+  }
 }

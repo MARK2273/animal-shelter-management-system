@@ -11,6 +11,7 @@ import {
   Put,
   Param,
   Delete,
+  // UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -22,7 +23,19 @@ import { AnimalTypeService } from '../animalType/animalType.service';
 import { AnimalDescriptionService } from '../animalDescription/animalDescription.service';
 import { UpdateAnimalDto } from './dto/animalUpdate.dto';
 import { ShelterService } from '../shelter/shelter.service';
-import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
+import { Breed } from '../breed/breed.entity';
+import { AnimalType } from '../animalType/animalType.entity';
+import { AnimalDescription } from '../animalDescription/animalDescription.entity';
+import { Shelter } from '../shelter/shelter.entity';
+import { Animal } from './animal.entity';
+// import { AuthGaurd } from '../staff/staff.guard';
 
 @Controller('animal')
 export class AnimalController {
@@ -36,10 +49,12 @@ export class AnimalController {
 
   @Get('/getall')
   @ApiTags('Animal')
-  getAllCustomer() {
+  getAllCustomer(): Promise<Animal[]> {
     return this.animalService.getAllAnimals();
   }
 
+  // @UseGuards(AuthGaurd)
+  @ApiBearerAuth()
   @Post('/create')
   @HttpCode(200)
   @ApiTags('Animal')
@@ -51,16 +66,17 @@ export class AnimalController {
   async createCustomer(
     @Body() customerData: CreateAnimalDto,
     @Res() res: Response,
-  ) {
-    const breed = await this.breedService.findBreedId(customerData.breedId);
-    const animalType = await this.animalTypeService.findAnimalTypeId(
-      customerData.animalTypeId,
+  ): Promise<void> {
+    const breed: Breed = await this.breedService.findBreedId(
+      customerData.breedId,
     );
-    const animalDescription =
+    const animalType: AnimalType =
+      await this.animalTypeService.findAnimalTypeId(customerData.animalTypeId);
+    const animalDescription: AnimalDescription =
       await this.animalDescriptionService.findAnimalDescriptionId(
         customerData.animalDescriptionId,
       );
-    const shelter = await this.shelterService.findShelterId(
+    const shelter: Shelter = await this.shelterService.findShelterId(
       customerData.shelterId,
     );
 
@@ -85,6 +101,8 @@ export class AnimalController {
     }
   }
 
+  // @UseGuards(AuthGaurd)
+  @ApiBearerAuth()
   @Put('/update/:id')
   @ApiTags('Animal')
   @ApiConsumes('application/x-www-form-urlencoded')
@@ -96,17 +114,19 @@ export class AnimalController {
     @Body() updateAnimalDto: UpdateAnimalDto,
 
     @Res() res: Response,
-  ) {
+  ): Promise<void> {
     return this.animalService.updateAnimal(id, updateAnimalDto, res);
   }
 
+  // @UseGuards(AuthGaurd)
+  @ApiBearerAuth()
   @Delete('/delete/:id')
   @ApiTags('Animal')
   @ApiConsumes('application/x-www-form-urlencoded')
   @ApiParam({
     name: 'id',
   })
-  async deleteAnimal(@Param() id: number, @Res() res: Response) {
+  async deleteAnimal(@Param() id: number, @Res() res: Response): Promise<void> {
     return await this.animalService.deleteAnimal(id, res);
   }
 }

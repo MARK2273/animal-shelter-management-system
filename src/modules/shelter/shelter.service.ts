@@ -11,6 +11,10 @@ import { ShelterResponseDto } from './dto/shelterResponse.dto';
 import { plainToInstance } from 'class-transformer';
 import { UpdateShelterDto } from './dto/shelterUpdate.dto';
 import { AnimalRepository } from '../animal/animal.repository';
+import { EntityManager } from 'typeorm';
+import { Shelter } from './shelter.entity';
+import { Staff } from '../staff/staff.entity';
+import { CreateStaffWithShelterDto } from '../staff/dto/createStaff.dto';
 
 @Injectable()
 export class ShelterService {
@@ -18,10 +22,11 @@ export class ShelterService {
     private shelterRepository: ShelterRepository,
     private staffRepository: StaffRepository,
     private animalRepository: AnimalRepository,
+    private entityManager: EntityManager,
   ) {}
 
-  async createShelter(shelter: CreateShelterDto, res: Response) {
-    const validShelter = await this.findShelterByEmail(shelter.email);
+  async createShelter(shelter: CreateShelterDto, res: Response): Promise<void> {
+    const validShelter: Shelter = await this.findShelterByEmail(shelter.email);
     if (validShelter) {
       return generalResponse(
         res,
@@ -32,8 +37,14 @@ export class ShelterService {
         400,
       );
     } else {
-      const data = await this.shelterRepository.save(shelter);
-      const createdShelter = {
+      const data: CreateShelterDto & Shelter =
+        await this.shelterRepository.save(shelter);
+      const createdShelter: {
+        id: number;
+        'Shelter Name': string;
+        Email: string;
+        Address: string;
+      } = {
         id: data.id,
         'Shelter Name': data.name,
         Email: data.email,
@@ -52,42 +63,50 @@ export class ShelterService {
 
   async createShelterWithStaff(
     createShelterWithDto: CreateShelterWithStaffDto,
-  ): Promise<ShelterResponseDto> {
+  ): Promise<void> {
     const { staff, ...shelterData } = createShelterWithDto;
 
-    const newShelter = this.shelterRepository.create(shelterData);
-    await this.shelterRepository.save(newShelter);
+    await this.entityManager.transaction(
+      async (manager: EntityManager): Promise<ShelterResponseDto> => {
+        const newShelter: Shelter = this.shelterRepository.create(shelterData);
+        await manager.save(newShelter);
 
-    const staffEntities = staff.map((staffDto) => {
-      const staffEntity = this.staffRepository.create(staffDto);
-      staffEntity.shelter = [newShelter];
-      return staffEntity;
-    });
+        const staffEntities: Staff[] = staff.map(
+          (staffDto: CreateStaffWithShelterDto): Staff => {
+            const staffEntity: Staff = this.staffRepository.create(staffDto);
+            staffEntity.shelter = [newShelter];
+            return staffEntity;
+          },
+        );
 
-    await this.staffRepository.save(staffEntities);
-
-    newShelter.staff = staffEntities;
-
-    return plainToInstance(ShelterResponseDto, newShelter, {
-      excludeExtraneousValues: true,
-    });
+        await manager.save(staffEntities);
+        newShelter.staff = staffEntities;
+        return plainToInstance(ShelterResponseDto, newShelter, {
+          excludeExtraneousValues: true,
+        });
+      },
+    );
   }
 
   async updateShelter(
     id: number,
     updateShelterDto: UpdateShelterDto,
     res: Response,
-  ) {
+  ): Promise<void> {
     try {
-      const shelter = await this.findShelterId(id);
+      const shelter: Shelter = await this.findShelterId(id);
       if (!shelter) {
         return generalResponse(res, '', 'No Shelter Found', 'error', true, 500);
       }
 
       Object.assign(shelter, updateShelterDto);
-      const data = await this.shelterRepository.save(shelter);
+      const data: Shelter = await this.shelterRepository.save(shelter);
 
-      const updatedShelter = {
+      const updatedShelter: {
+        name: string;
+        email: string;
+        address: string;
+      } = {
         name: data.name,
         email: data.email,
         address: data.address,
@@ -112,10 +131,10 @@ export class ShelterService {
     }
   }
 
-  async deleteShelter(shelterId, res: Response) {
+  async deleteShelter(shelterId, res: Response): Promise<void> {
     try {
-      const id = shelterId.id;
-      const shelter = await this.findShelterId(id);
+      const id: number = +shelterId.id;
+      const shelter: Shelter = await this.findShelterId(id);
 
       if (!shelter) {
         return generalResponse(
@@ -160,7 +179,7 @@ export class ShelterService {
     }
   }
 
-  async findShelterByEmail(email: string) {
+  async findShelterByEmail(email: string): Promise<Shelter> {
     const shelter = await this.shelterRepository.findOne({
       where: { email, deleted_at: null },
       select: {
@@ -170,8 +189,8 @@ export class ShelterService {
     return shelter;
   }
 
-  async findShelterId(id: number) {
-    const data = await this.shelterRepository.findOne({
+  async findShelterId(id: number): Promise<Shelter> {
+    const data: Shelter = await this.shelterRepository.findOne({
       where: { id: +id },
       relations: ['staff', 'animals', 'donation'],
     });

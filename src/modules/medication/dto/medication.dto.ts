@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 
 export class MedicationDto {
   @ApiProperty({
@@ -18,7 +18,7 @@ export class MedicationDto {
 
   @ApiProperty({
     description: 'Date of vaccination',
-    example: '2024-06-19T12:00:00Z',
+    example: '2024-06-19',
   })
   @IsNotEmpty({ message: 'Vaccination Date should not be empty' })
   @IsDateString({}, { message: 'Vaccination Date must be a valid date string' })

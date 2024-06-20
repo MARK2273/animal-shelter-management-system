@@ -10,13 +10,21 @@ import {
   Param,
   Delete,
   Get,
+  // UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 
 import { AnimalDescriptionService } from './animalDescription.service';
 import { CreateAnimalDescriptionDto } from './dto/animalDescription.dto';
 import { UpdateAnimalDescriptionDto } from './dto/animalDescriptionUpdate.dto';
-import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
+// import { AuthGaurd } from '../staff/staff.guard';
 
 @Controller('animaldescription')
 export class AnimalDescriptionController {
@@ -28,6 +36,8 @@ export class AnimalDescriptionController {
     return this.animalDescriptionService.getAllAnimalDescription();
   }
 
+  // @UseGuards(AuthGaurd)
+  @ApiBearerAuth()
   @Post('/create')
   @HttpCode(200)
   @ApiTags('Animal Description')
@@ -39,13 +49,15 @@ export class AnimalDescriptionController {
   async createAnimalDescription(
     @Body() animalDescriptionData: CreateAnimalDescriptionDto,
     @Res() res: Response,
-  ) {
+  ): Promise<void> {
     return await this.animalDescriptionService.createAnimalDescription(
       animalDescriptionData,
       res,
     );
   }
 
+  // @UseGuards(AuthGaurd)
+  @ApiBearerAuth()
   @Put('/update/:id')
   @ApiTags('Animal Description')
   @ApiConsumes('application/x-www-form-urlencoded')
@@ -56,7 +68,7 @@ export class AnimalDescriptionController {
     @Param('id') id: number,
     @Body() updateAnimalDescriptionDto: UpdateAnimalDescriptionDto,
     @Res() res: Response,
-  ) {
+  ): Promise<void> {
     return this.animalDescriptionService.updateAnimalDescription(
       id,
       updateAnimalDescriptionDto,
@@ -64,6 +76,8 @@ export class AnimalDescriptionController {
     );
   }
 
+  // @UseGuards(AuthGaurd)
+  @ApiBearerAuth()
   @Delete('/delete/:id')
   @ApiTags('Animal Description')
   @ApiConsumes('application/x-www-form-urlencoded')

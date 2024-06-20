@@ -3,9 +3,9 @@ import { IsString, IsOptional } from 'class-validator';
 
 export class UpdateBreedDto {
   @ApiProperty({
-    description: 'Name of the animal type',
+    description: 'Name of the Animal Breed',
     example: 'Dog',
-    required: false, // Not required for update
+    required: false,
   })
   @IsString()
   @IsOptional()

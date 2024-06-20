@@ -5,6 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { MedicationRepository } from './medication.repository';
 import { BreedRepository } from '../breed/breed.repository';
 import { BreedService } from '../breed/breed.service';
+import { StaffModule } from '../staff/staff.module';
+import { StaffService } from '../staff/staff.service';
+import { StaffRepository } from '../staff/staff.repository';
 
 @Module({
   controllers: [MedicationController],
@@ -13,7 +16,15 @@ import { BreedService } from '../breed/breed.service';
     MedicationService,
     BreedService,
     BreedRepository,
+    StaffService,
   ],
-  imports: [TypeOrmModule.forFeature([MedicationRepository, BreedRepository])],
+  imports: [
+    TypeOrmModule.forFeature([
+      MedicationRepository,
+      BreedRepository,
+      StaffRepository,
+    ]),
+    StaffModule,
+  ],
 })
 export class MedicationModule {}

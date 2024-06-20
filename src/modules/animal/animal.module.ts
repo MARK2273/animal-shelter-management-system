@@ -13,9 +13,22 @@ import { AnimalDescriptionService } from '../animalDescription/animalDescription
 import { ShelterRepository } from '../shelter/shelter.repository';
 import { ShelterService } from '../shelter/shelter.service';
 import { StaffRepository } from '../staff/staff.repository';
+import { StaffModule } from '../staff/staff.module';
+import { StaffService } from '../staff/staff.service';
 
 @Module({
-  controllers: [AnimalController],
+  imports: [
+    TypeOrmModule.forFeature([
+      AnimalRepository,
+      BreedRepository,
+      MedicationRepository,
+      AnimalTypeRepository,
+      AnimalDescriptionRepository,
+      ShelterRepository,
+      StaffRepository,
+    ]),
+    StaffModule,
+  ],
   providers: [
     AnimalRepository,
     AnimalService,
@@ -28,17 +41,8 @@ import { StaffRepository } from '../staff/staff.repository';
     AnimalDescriptionService,
     ShelterRepository,
     ShelterService,
+    StaffService,
   ],
-  imports: [
-    TypeOrmModule.forFeature([
-      AnimalRepository,
-      BreedRepository,
-      MedicationRepository,
-      AnimalTypeRepository,
-      AnimalDescriptionRepository,
-      ShelterRepository,
-      StaffRepository,
-    ]),
-  ],
+  controllers: [AnimalController],
 })
 export class AnimalModule {}

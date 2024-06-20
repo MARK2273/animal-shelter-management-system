@@ -19,14 +19,22 @@ export class Breed extends BaseEntity {
   @Column()
   name: string;
 
-  @OneToMany(() => Medication, (medication) => medication.breed, {
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(
+    (): typeof Medication => Medication,
+    (medication: Medication): Breed => medication.breed,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
   medication: Medication[];
 
-  @OneToMany(() => Animal, (animal) => animal.breed, {
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(
+    (): typeof Animal => Animal,
+    (animal: Animal): Breed => animal.breed,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
   animal: Animal[];
 
   @CreateDateColumn({ type: 'timestamp' })

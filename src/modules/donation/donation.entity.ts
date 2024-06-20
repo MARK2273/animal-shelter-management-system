@@ -33,15 +33,24 @@ export class Donation extends BaseEntity {
   @DeleteDateColumn({ type: 'timestamp' })
   deleted_at: Date;
 
-  @ManyToOne(() => Animal, (animal) => animal.donation)
+  @ManyToOne(
+    (): typeof Animal => Animal,
+    (animal: Animal): Donation[] => animal.donation,
+  )
   @JoinColumn()
   animal?: Animal;
 
-  @ManyToOne(() => Customer, (customer) => customer.donation)
+  @ManyToOne(
+    (): typeof Customer => Customer,
+    (customer: Customer): Donation[] => customer.donation,
+  )
   @JoinColumn()
   customer: Customer;
 
-  @ManyToOne(() => Shelter, (shelter) => shelter.donation)
+  @ManyToOne(
+    (): typeof Shelter => Shelter,
+    (shelter: Shelter): Donation[] => shelter.donation,
+  )
   @JoinColumn()
   shelter: Shelter;
 }

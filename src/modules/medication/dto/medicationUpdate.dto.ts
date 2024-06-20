@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsDate, IsOptional } from 'class-validator';
+import { IsString, IsOptional } from 'class-validator';
 
 export class UpdateMedicationDto {
   @ApiProperty({
@@ -22,10 +22,9 @@ export class UpdateMedicationDto {
 
   @ApiProperty({
     description: 'Date of vaccination',
-    example: '2024-06-19T12:00:00Z',
+    example: '2024-06-19',
     required: false,
   })
-  @IsDate()
   @IsOptional()
   vaccination_date?: Date;
 }

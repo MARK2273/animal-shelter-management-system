@@ -9,6 +9,7 @@ import {
   Put,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -17,14 +18,23 @@ import {
   CreateShelterDto,
   CreateShelterWithStaffDto,
 } from './dto/createShelter.dto';
-import { ShelterResponseDto } from './dto/shelterResponse.dto';
 import { UpdateShelterDto } from './dto/shelterUpdate.dto';
-import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiParam,
+  ApiTags,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
+import { AuthGaurd } from '../staff/staff.guard';
 
+@UseGuards(AuthGaurd)
+@ApiBearerAuth()
 @Controller('shelter')
 export class ShelterController {
   constructor(private shelterService: ShelterService) {}
 
+  @UseGuards(AuthGaurd)
   @Post('/create')
   @ApiTags('Shelter')
   @ApiConsumes('application/x-www-form-urlencoded')
@@ -36,7 +46,7 @@ export class ShelterController {
   async createCustomer(
     @Body() shelterData: CreateShelterDto,
     @Res() res: Response,
-  ) {
+  ): Promise<void> {
     return await this.shelterService.createShelter(shelterData, res);
   }
 
@@ -48,7 +58,7 @@ export class ShelterController {
   })
   async createShelterWithStaff(
     @Body() createShelterWithDto: CreateShelterWithStaffDto,
-  ): Promise<ShelterResponseDto> {
+  ): Promise<void> {
     return this.shelterService.createShelterWithStaff(createShelterWithDto);
   }
 
@@ -62,7 +72,7 @@ export class ShelterController {
     @Param('id') id: number,
     @Body() updateShelterDto: UpdateShelterDto,
     @Res() res: Response,
-  ) {
+  ): Promise<void> {
     return await this.shelterService.updateShelter(id, updateShelterDto, res);
   }
 

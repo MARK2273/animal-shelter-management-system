@@ -10,6 +10,7 @@ import {
   Delete,
   Put,
   Get,
+  // UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -18,7 +19,14 @@ import { MedicationDto } from './dto/medication.dto';
 import { BreedService } from '../breed/breed.service';
 import generalResponse from 'src/helper/genrelResponse.helper';
 import { UpdateMedicationDto } from './dto/medicationUpdate.dto';
-import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
+// import { AuthGaurd } from '../staff/staff.guard';
 
 @Controller('medication')
 export class MedicationController {
@@ -33,16 +41,21 @@ export class MedicationController {
   @ApiParam({
     name: 'breedId',
   })
-  async getMedicationsByBreedId(@Param('breedId') breedId: number) {
-    return this.medicationService.getMedicationsByBreedId(breedId);
+  async getMedicationsByBreedId(
+    @Param('breedId') breedId: number,
+    @Res() res: Response,
+  ): Promise<void> {
+    return this.medicationService.getMedicationsByBreedId(breedId, res);
   }
 
   @Get('/getall')
   @ApiTags('Medication')
-  async getAllMedications() {
-    return this.medicationService.getAllMedications();
+  async getAllMedications(@Res() res: Response): Promise<void> {
+    return this.medicationService.getAllMedications(res);
   }
 
+  // @UseGuards(AuthGaurd)
+  @ApiBearerAuth()
   @Post('/create')
   @HttpCode(200)
   @ApiTags('Medication')
@@ -67,6 +80,8 @@ export class MedicationController {
     }
   }
 
+  // @UseGuards(AuthGaurd)
+  @ApiBearerAuth()
   @Put('/update/:id')
   @ApiTags('Medication')
   @ApiConsumes('application/x-www-form-urlencoded')
@@ -77,7 +92,7 @@ export class MedicationController {
     @Param('id') id: number,
     @Body() updateMedicationDto: UpdateMedicationDto,
     @Res() res: Response,
-  ) {
+  ): Promise<void> {
     return this.medicationService.updateMedication(
       id,
       updateMedicationDto,
@@ -85,13 +100,22 @@ export class MedicationController {
     );
   }
 
+  // @UseGuards(AuthGaurd)
+  @ApiBearerAuth()
   @Delete('/delete/:breedId')
   @ApiTags('Medication')
   @ApiConsumes('application/x-www-form-urlencoded')
   @ApiParam({
     name: 'breedId',
   })
+<<<<<<< HEAD
   async deleteMedication(@Param() breedId: number, @Res() res: Response) {
+=======
+  async deleteMedication(
+    @Param() breedId: number,
+    @Res() res: Response,
+  ): Promise<void> {
+>>>>>>> cb9cace7e2a1de9630249920b5511ff6150c2c27
     return await this.medicationService.deleteMedication(breedId, res);
   }
 }

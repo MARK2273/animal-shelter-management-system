@@ -1,14 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsNotEmpty } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 // import { Medication } from '../../medication/medication.entity';
 
 export class BreedDto {
   @ApiProperty({
-    description: 'Name of the animal type',
-    example: 'Dog',
+    description: 'Name of the Breed',
+    example: 'Bulldog',
     required: true,
   })
-  @IsNotEmpty({ message: 'Animal type should not be empty' })
+  @IsNotEmpty({ message: 'Animal Breed should not be empty' })
   name: string;
 }
 

@@ -4,6 +4,7 @@ import { CreateAnimalDescriptionDto } from './dto/animalDescription.dto';
 import { Response } from 'express';
 import generalResponse from 'src/helper/genrelResponse.helper';
 import { UpdateAnimalDescriptionDto } from './dto/animalDescriptionUpdate.dto';
+import { AnimalDescription } from './animalDescription.entity';
 
 @Injectable()
 export class AnimalDescriptionService {
@@ -11,7 +12,7 @@ export class AnimalDescriptionService {
     private animalDescriptionRepository: AnimalDescriptionRepository,
   ) {}
 
-  async getAllAnimalDescription() {
+  async getAllAnimalDescription(): Promise<AnimalDescription[]> {
     return this.animalDescriptionRepository.find({
       relations: ['animal'],
       select: {
@@ -32,9 +33,9 @@ export class AnimalDescriptionService {
   async createAnimalDescription(
     animalDescription: CreateAnimalDescriptionDto,
     res: Response,
-  ) {
+  ): Promise<void> {
     try {
-      const data =
+      const data: CreateAnimalDescriptionDto & AnimalDescription =
         await this.animalDescriptionRepository.save(animalDescription);
       const createdAnimalDescription = {
         id: data.id,
@@ -65,9 +66,10 @@ export class AnimalDescriptionService {
     id: number,
     updateAnimalDescriptionDto: UpdateAnimalDescriptionDto,
     res: Response,
-  ) {
+  ): Promise<void> {
     try {
-      const animalDescription = await this.validAnimalDescription(id);
+      const animalDescription: AnimalDescription =
+        await this.validAnimalDescription(id);
 
       if (!animalDescription) {
         return generalResponse(
@@ -82,10 +84,13 @@ export class AnimalDescriptionService {
 
       Object.assign(animalDescription, updateAnimalDescriptionDto);
 
-      const data =
+      const data: AnimalDescription =
         await this.animalDescriptionRepository.save(animalDescription);
 
-      const updatedData = {
+      const updatedData: {
+        'Food Preference': string;
+        'Special Day': Date;
+      } = {
         'Food Preference': data.food_preference,
         'Special Day': data.special_day,
       };
@@ -112,8 +117,9 @@ export class AnimalDescriptionService {
 
   async deleteAnimalDescription(animalDescription, res: Response) {
     try {
-      const id = animalDescription.id;
-      const AnimalDescription = await this.validAnimalDescription(id);
+      const id: number = +animalDescription.id;
+      const AnimalDescription: AnimalDescription =
+        await this.validAnimalDescription(id);
       if (AnimalDescription) {
         await this.animalDescriptionRepository.softDelete({ id });
 
@@ -147,17 +153,18 @@ export class AnimalDescriptionService {
     }
   }
 
-  async validAnimalDescription(id: number) {
+  async validAnimalDescription(id: number): Promise<AnimalDescription> {
     return await this.animalDescriptionRepository.findOne({
       where: { id },
     });
   }
 
-  async findAnimalDescriptionId(id: number) {
-    const description = await this.animalDescriptionRepository.findOne({
-      where: { id },
-      relations: ['animal'],
-    });
+  async findAnimalDescriptionId(id: number): Promise<AnimalDescription> {
+    const description: AnimalDescription =
+      await this.animalDescriptionRepository.findOne({
+        where: { id },
+        relations: ['animal'],
+      });
     return description;
   }
 }

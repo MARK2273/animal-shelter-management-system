@@ -6,6 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const options = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('Animal Shelter')
     .setDescription('Animal Shelter Mangement System')
     .setVersion('1.0')

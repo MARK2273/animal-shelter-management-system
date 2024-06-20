@@ -13,7 +13,7 @@ export class CreateDonationDto {
 
   @ApiProperty({
     description: 'Date of donation',
-    example: '2024-06-19T12:00:00.000Z',
+    example: '2024-06-19',
   })
   @IsNotEmpty({ message: 'Date should not be empty' })
   date: Date;

@@ -3,12 +3,13 @@ import { CustomerRepository } from './customer.repository';
 import { CreateCustomerDto } from './dto/CreateCustomer.dto';
 import { Response } from 'express';
 import generalResponse from 'src/helper/genrelResponse.helper';
+import { Customer } from './customer.entity';
 
 @Injectable()
 export class CustomerService {
   constructor(private customerRepository: CustomerRepository) {}
 
-  async getAllCustomer() {
+  async getAllCustomer(): Promise<Customer[]> {
     return this.customerRepository.find({
       select: {
         fname: true,
@@ -20,9 +21,14 @@ export class CustomerService {
     });
   }
 
-  async createCustomer(customer: CreateCustomerDto, res: Response) {
+  async createCustomer(
+    customer: CreateCustomerDto,
+    res: Response,
+  ): Promise<void> {
     try {
-      const validCustomer = await this.findCustomerByEmail(customer.email);
+      const validCustomer: Customer = await this.findCustomerByEmail(
+        customer.email,
+      );
       if (validCustomer) {
         return generalResponse(
           res,
@@ -33,8 +39,15 @@ export class CustomerService {
           400,
         );
       } else {
-        const data = await this.customerRepository.save(customer);
-        const createdCustomer = {
+        const data: CreateCustomerDto & Customer =
+          await this.customerRepository.save(customer);
+        const createdCustomer: {
+          id: number;
+          'First Name': string;
+          'Last Name': string;
+          Email: string;
+          contact: string;
+        } = {
           id: data.id,
           'First Name': data.fname,
           'Last Name': data.lname,
@@ -62,7 +75,7 @@ export class CustomerService {
     }
   }
 
-  async findCustomerByEmail(email: string) {
+  async findCustomerByEmail(email: string): Promise<Customer> {
     const customer = await this.customerRepository.findOne({
       where: { email },
       select: {
@@ -72,7 +85,7 @@ export class CustomerService {
     return customer;
   }
 
-  async findCustomerById(id: number) {
+  async findCustomerById(id: number): Promise<Customer> {
     const customer = await this.customerRepository.findOne({
       where: { id },
       relations: ['donation'],

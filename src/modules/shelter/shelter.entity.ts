@@ -38,20 +38,34 @@ export class Shelter extends BaseEntity {
   @DeleteDateColumn({ type: 'timestamp' })
   deleted_at: Date;
 
-  @ManyToMany(() => Staff, (staff) => staff.shelter)
+  @ManyToMany(
+    (): typeof Staff => Staff,
+    (staff: Staff): Shelter[] => staff.shelter,
+  )
   @JoinTable()
   staff: Staff[];
 
-  @OneToMany(() => Animal, (animal) => animal.shelter)
+  @OneToMany(
+    (): typeof Animal => Animal,
+    (animal: Animal): Shelter => animal.shelter,
+  )
   animals: Animal[];
 
-  @OneToMany(() => Donation, (donation) => donation.animal, {
-    cascade: true,
-  })
+  @OneToMany(
+    (): typeof Donation => Donation,
+    (donation: Donation): Animal => donation.animal,
+    {
+      cascade: true,
+    },
+  )
   donation: Donation[];
 
-  @OneToMany(() => Adoption, (adoption) => adoption.animal, {
-    cascade: true,
-  })
+  @OneToMany(
+    (): typeof Adoption => Adoption,
+    (adoption: Adoption): Animal => adoption.animal,
+    {
+      cascade: true,
+    },
+  )
   adoption: Adoption[];
 }

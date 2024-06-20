@@ -25,7 +25,7 @@ export class CreateAdoptionDto {
 
   @ApiProperty({
     description: 'Date of adoption',
-    example: '2024-06-19T18:25:43.511Z',
+    example: '2024-06-19',
     type: Date,
   })
   @IsNotEmpty({ message: 'Date should not be empty ' })
