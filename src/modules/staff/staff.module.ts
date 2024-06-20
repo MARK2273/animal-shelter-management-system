@@ -10,7 +10,7 @@ import { AnimalService } from '../animal/animal.service';
 import { JwtModule } from '@nestjs/jwt';
 import { configDotenv } from 'dotenv';
 configDotenv();
-const key = process.env.SECRET_KEY;
+const key: string = process.env.SECRET_KEY;
 
 @Module({
   controllers: [StaffController],
@@ -30,5 +30,6 @@ const key = process.env.SECRET_KEY;
     ]),
     JwtModule.register({ global: true, secret: key }),
   ],
+  exports: [StaffService],
 })
 export class StaffModule {}

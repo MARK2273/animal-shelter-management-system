@@ -17,7 +17,18 @@ import { StaffModule } from '../staff/staff.module';
 import { StaffService } from '../staff/staff.service';
 
 @Module({
-  controllers: [AnimalController],
+  imports: [
+    TypeOrmModule.forFeature([
+      AnimalRepository,
+      BreedRepository,
+      MedicationRepository,
+      AnimalTypeRepository,
+      AnimalDescriptionRepository,
+      ShelterRepository,
+      StaffRepository,
+    ]),
+    StaffModule,
+  ],
   providers: [
     AnimalRepository,
     AnimalService,
@@ -32,17 +43,6 @@ import { StaffService } from '../staff/staff.service';
     ShelterService,
     StaffService,
   ],
-  imports: [
-    TypeOrmModule.forFeature([
-      AnimalRepository,
-      BreedRepository,
-      MedicationRepository,
-      AnimalTypeRepository,
-      AnimalDescriptionRepository,
-      ShelterRepository,
-      StaffRepository,
-    ]),
-    StaffModule,
-  ],
+  controllers: [AnimalController],
 })
 export class AnimalModule {}

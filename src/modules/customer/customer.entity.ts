@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { Donation } from '../donation/donation.entity';
 import { Adoption } from '../Adoption/adoption.entity';
+import { Animal } from '../animal/animal.entity';
 
 @Entity('customers')
 export class Customer extends BaseEntity {
@@ -40,13 +41,21 @@ export class Customer extends BaseEntity {
   @DeleteDateColumn({ type: 'timestamp' })
   deleted_at: Date;
 
-  @OneToMany(() => Donation, (donation) => donation.animal, {
-    cascade: true,
-  })
+  @OneToMany(
+    (): typeof Donation => Donation,
+    (donation: Donation): Animal => donation.animal,
+    {
+      cascade: true,
+    },
+  )
   donation: Donation[];
 
-  @OneToMany(() => Adoption, (adoption) => adoption.animal, {
-    cascade: true,
-  })
+  @OneToMany(
+    (): typeof Adoption => Adoption,
+    (adoption: Adoption): Animal => adoption.animal,
+    {
+      cascade: true,
+    },
+  )
   adoption: Adoption[];
 }

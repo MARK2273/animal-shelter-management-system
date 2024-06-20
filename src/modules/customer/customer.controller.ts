@@ -13,6 +13,7 @@ import { Response } from 'express';
 import { CustomerService } from './customer.service';
 import { CreateCustomerDto } from './dto/CreateCustomer.dto';
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { Customer } from './customer.entity';
 
 @Controller('customer')
 export class CustomerController {
@@ -20,7 +21,7 @@ export class CustomerController {
 
   @Get('/getallcustomers')
   @ApiTags('Customer')
-  getAllCustomer() {
+  getAllCustomer(): Promise<Customer[]> {
     return this.customerService.getAllCustomer();
   }
 
@@ -35,7 +36,7 @@ export class CustomerController {
   async createCustomer(
     @Body() customerData: CreateCustomerDto,
     @Res() res: Response,
-  ) {
+  ): Promise<void> {
     return await this.customerService.createCustomer(customerData, res);
   }
 }

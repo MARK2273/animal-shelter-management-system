@@ -8,15 +8,16 @@ import { UpdateStaffDto } from './dto/staffUpdate.dto';
 import { EntityManager } from 'typeorm';
 import { FindUser } from './dto/findStaff.dto';
 import { verify } from 'argon2';
+import { Staff } from './staff.entity';
 
 @Injectable()
 export class StaffService {
   constructor(
-    private staffRepository: StaffRepository,
+    public staffRepository: StaffRepository,
     private readonly entityManager: EntityManager,
   ) {}
 
-  async getStaffByShelterId(shelterId: number) {
+  async getStaffByShelterId(shelterId: number): Promise<Staff[]> {
     return this.staffRepository.find({
       where: { shelter: { id: shelterId } },
       select: {
@@ -35,9 +36,13 @@ export class StaffService {
     });
   }
 
-  async createStaff(staff: CreateStaffDto, shelter: Shelter, res: Response) {
+  async createStaff(
+    staff: CreateStaffDto,
+    shelter: Shelter,
+    res: Response,
+  ): Promise<void> {
     try {
-      const validStaff = await this.findStaffByEmail(staff.email);
+      const validStaff: Staff = await this.findStaffByEmail(staff.email);
 
       if (validStaff) {
         return generalResponse(
@@ -50,9 +55,14 @@ export class StaffService {
         );
       }
 
-      const createdStaff = await this.entityManager.transaction(
-        async (manager) => {
-          const newStaff = this.staffRepository.create(staff);
+      const createdStaff: {
+        id: number;
+        name: string;
+        email: string;
+        contact: string;
+      } = await this.entityManager.transaction(
+        async (manager: EntityManager) => {
+          const newStaff: Staff = this.staffRepository.create(staff);
           await manager.save(newStaff);
 
           shelter.staff.push(newStaff);
@@ -90,12 +100,14 @@ export class StaffService {
 
   async updateStaff(id: number, updateStaffDto: UpdateStaffDto, res: Response) {
     try {
-      const staff = await this.findStaffById(id);
+      const staff: Staff = await this.findStaffById(id);
       if (!staff) {
         return generalResponse(res, '', 'No Staff Found', 'success', true, 201);
       }
 
-      const validStaff = await this.findStaffByEmail(updateStaffDto.email);
+      const validStaff: Staff = await this.findStaffByEmail(
+        updateStaffDto.email,
+      );
       if (validStaff) {
         return generalResponse(
           res,
@@ -109,7 +121,7 @@ export class StaffService {
 
       Object.assign(staff, updateStaffDto);
 
-      const data = await this.staffRepository.save(staff);
+      const data: Staff = await this.staffRepository.save(staff);
       const updatedStaff = {
         name: data.name,
         email: data.email,
@@ -137,10 +149,10 @@ export class StaffService {
     }
   }
 
-  async deleteStaff(staff, res: Response) {
+  async deleteStaff(staff, res: Response): Promise<void> {
     try {
-      const staffId = staff.id;
-      const validStaff = await this.findStaffById(staffId);
+      const staffId: number = +staff.id;
+      const validStaff: Staff = await this.findStaffById(staffId);
       if (validStaff) {
         await this.staffRepository.softDelete({ id: staffId });
 
@@ -167,28 +179,36 @@ export class StaffService {
     }
   }
 
-  async findStaffByEmail(email: string) {
+  async findStaffByEmail(email: string): Promise<Staff> {
     const staff = await this.staffRepository.findOne({
       where: { email },
     });
     return staff;
   }
 
-  async findStaffById(id: number) {
+  async findStaffById(id: number): Promise<Staff> {
     const staff = await this.staffRepository.findOne({
       where: { id },
     });
     return staff;
   }
 
-  async verifyUser(userData: FindUser) {
+  async verifyUser(userData: FindUser): Promise<{
+    success: boolean;
+    message: string;
+    result: any;
+    statusCode: number;
+  }> {
     try {
-      const data = await this.staffRepository.findOne({
+      const data: Staff = await this.staffRepository.findOne({
         where: { email: userData.email },
       });
 
       if (data) {
-        const validate = await verify(data.password, userData.password);
+        const validate: boolean = await verify(
+          data.password,
+          userData.password,
+        );
         if (validate) {
           return this.returnObjectFunction(
             true,

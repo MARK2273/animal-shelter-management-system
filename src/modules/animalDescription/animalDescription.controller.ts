@@ -10,7 +10,7 @@ import {
   Param,
   Delete,
   Get,
-  UseGuards,
+  // UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -24,7 +24,7 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthGaurd } from '../staff/staff.guard';
+// import { AuthGaurd } from '../staff/staff.guard';
 
 @Controller('animaldescription')
 export class AnimalDescriptionController {
@@ -36,7 +36,7 @@ export class AnimalDescriptionController {
     return this.animalDescriptionService.getAllAnimalDescription();
   }
 
-  @UseGuards(AuthGaurd)
+  // @UseGuards(AuthGaurd)
   @ApiBearerAuth()
   @Post('/create')
   @HttpCode(200)
@@ -49,14 +49,14 @@ export class AnimalDescriptionController {
   async createAnimalDescription(
     @Body() animalDescriptionData: CreateAnimalDescriptionDto,
     @Res() res: Response,
-  ) {
+  ): Promise<void> {
     return await this.animalDescriptionService.createAnimalDescription(
       animalDescriptionData,
       res,
     );
   }
 
-  @UseGuards(AuthGaurd)
+  // @UseGuards(AuthGaurd)
   @ApiBearerAuth()
   @Put('/update/:id')
   @ApiTags('Animal Description')
@@ -68,7 +68,7 @@ export class AnimalDescriptionController {
     @Param('id') id: number,
     @Body() updateAnimalDescriptionDto: UpdateAnimalDescriptionDto,
     @Res() res: Response,
-  ) {
+  ): Promise<void> {
     return this.animalDescriptionService.updateAnimalDescription(
       id,
       updateAnimalDescriptionDto,
@@ -76,7 +76,7 @@ export class AnimalDescriptionController {
     );
   }
 
-  @UseGuards(AuthGaurd)
+  // @UseGuards(AuthGaurd)
   @ApiBearerAuth()
   @Delete('/delete/:id')
   @ApiTags('Animal Description')

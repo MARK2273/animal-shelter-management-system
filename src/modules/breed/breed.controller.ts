@@ -10,7 +10,7 @@ import {
   Param,
   Delete,
   Get,
-  UseGuards,
+  // UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -24,7 +24,8 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthGaurd } from '../staff/staff.guard';
+import { Breed } from './breed.entity';
+// import { AuthGaurd } from '../staff/staff.guard';
 
 @Controller('breed')
 export class BreedController {
@@ -32,11 +33,11 @@ export class BreedController {
 
   @Get('/getall')
   @ApiTags('Breed')
-  async getAllBreeds() {
+  async getAllBreeds(): Promise<Breed[]> {
     return this.breedService.getAllBreeds();
   }
 
-  @UseGuards(AuthGaurd)
+  // @UseGuards(AuthGaurd)
   @ApiBearerAuth()
   @Post('/create')
   @HttpCode(200)
@@ -46,11 +47,14 @@ export class BreedController {
     type: BreedDto,
   })
   @UsePipes(ValidationPipe)
-  async createBreed(@Body() breedData: BreedDto, @Res() res: Response) {
+  async createBreed(
+    @Body() breedData: BreedDto,
+    @Res() res: Response,
+  ): Promise<void> {
     return await this.breedService.createBreed(breedData, res);
   }
 
-  @UseGuards(AuthGaurd)
+  // @UseGuards(AuthGaurd)
   @ApiBearerAuth()
   @Post('/createwithmedication')
   @HttpCode(200)
@@ -63,11 +67,11 @@ export class BreedController {
   async createBreedWithMedication(
     @Body() breedData: BreedWithMedicationDto,
     @Res() res: Response,
-  ) {
+  ): Promise<void> {
     return await this.breedService.createBreedWithMedication(breedData, res);
   }
 
-  @UseGuards(AuthGaurd)
+  // @UseGuards(AuthGaurd)
   @ApiBearerAuth()
   @Put('/update/:id')
   @ApiTags('Breed')
@@ -79,11 +83,11 @@ export class BreedController {
     @Param('id') id: number,
     @Body() updateBreedDto: UpdateBreedDto,
     @Res() res: Response,
-  ) {
+  ): Promise<void> {
     return this.breedService.updateBreed(id, updateBreedDto, res);
   }
 
-  @UseGuards(AuthGaurd)
+  // @UseGuards(AuthGaurd)
   @ApiBearerAuth()
   @Delete('/delete/:breedId')
   @ApiTags('Breed')
@@ -91,7 +95,10 @@ export class BreedController {
   @ApiParam({
     name: 'breedId',
   })
-  async deleteMedication(@Param() breedId: number, @Res() res: Response) {
+  async deleteMedication(
+    @Param() breedId: number,
+    @Res() res: Response,
+  ): Promise<void> {
     return await this.breedService.deleteBreed(breedId, res);
   }
 }

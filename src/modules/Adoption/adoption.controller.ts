@@ -26,6 +26,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthGaurd } from '../staff/staff.guard';
+import { Customer } from '../customer/customer.entity';
+import { Shelter } from '../shelter/shelter.entity';
+import { Animal } from '../animal/animal.entity';
 
 @Controller('adoption')
 export class adoptionController {
@@ -60,8 +63,8 @@ export class adoptionController {
   async createAdoption(
     @Body() adoptionData: CreateAdoptionDto,
     @Res() res: Response,
-  ) {
-    const customer = await this.customerservice.findCustomerById(
+  ): Promise<void> {
+    const customer: Customer = await this.customerservice.findCustomerById(
       +adoptionData.customer.id,
     );
 
@@ -69,7 +72,7 @@ export class adoptionController {
       return generalResponse(res, '', 'No customer Found', 'error', true, 400);
     }
 
-    const shelter = await this.shelterService.findShelterId(
+    const shelter: Shelter = await this.shelterService.findShelterId(
       +adoptionData.shelter.id,
     );
 
@@ -77,7 +80,7 @@ export class adoptionController {
       return generalResponse(res, '', 'No shelter Found', 'error', true, 400);
     }
 
-    let animal;
+    let animal: Animal;
     if (adoptionData.animal) {
       animal = await this.animalService.findAnimalId(+adoptionData.animal.id);
     }

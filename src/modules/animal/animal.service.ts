@@ -4,12 +4,17 @@ import { Response } from 'express';
 import generalResponse from 'src/helper/genrelResponse.helper';
 import { AnimalRepository } from './animal.repository';
 import { UpdateAnimalDto } from './dto/animalUpdate.dto';
+import { EntityManager } from 'typeorm';
+import { Animal } from './animal.entity';
 
 @Injectable({ scope: Scope.REQUEST })
 export class AnimalService {
-  constructor(private animalRepository: AnimalRepository) {}
+  constructor(
+    private animalRepository: AnimalRepository,
+    private readonly entityManager: EntityManager,
+  ) {}
 
-  async getAllAnimals() {
+  async getAllAnimals(): Promise<Animal[]> {
     return this.animalRepository.find({
       relations: ['breed', 'animalType', 'animalDescription'],
       select: {
@@ -46,7 +51,8 @@ export class AnimalService {
     res: Response,
   ) {
     try {
-      const data = await this.animalRepository.save(animal);
+      const data: CreateAnimalDto & Animal =
+        await this.animalRepository.save(animal);
       const newAnimal = {
         id: data.id,
         Age: data.age,
@@ -56,17 +62,19 @@ export class AnimalService {
         'Cage size': data.cage_size,
       };
 
-      breed.animal = [...breed.animal, newAnimal];
-      await breed.save();
+      await this.entityManager.transaction(async (manager) => {
+        breed.animal = [...breed.animal, newAnimal];
+        await manager.save(breed);
 
-      animalType.animal = [...animalType.animal, newAnimal];
-      await animalType.save();
+        animalType.animal = [...animalType.animal, newAnimal];
+        await manager.save(animalType);
 
-      animalDescription.animal = newAnimal;
-      await animalDescription.save();
+        animalDescription.animal = newAnimal;
+        await manager.save(animalDescription);
 
-      shelter.animals = [...shelter.animals, newAnimal];
-      await shelter.save();
+        shelter.animals = [...shelter.animals, newAnimal];
+        await manager.save(shelter);
+      });
 
       return generalResponse(
         res,
@@ -92,9 +100,9 @@ export class AnimalService {
     id: number,
     updateAnimalDto: UpdateAnimalDto,
     res: Response,
-  ) {
+  ): Promise<void> {
     try {
-      const animal = await this.findAnimalId(id);
+      const animal: Animal = await this.findAnimalId(id);
       if (!animal) {
         return generalResponse(
           res,
@@ -108,7 +116,7 @@ export class AnimalService {
 
       Object.assign(animal, updateAnimalDto);
 
-      const data = await this.animalRepository.save(animal);
+      const data: Animal = await this.animalRepository.save(animal);
       const updatedAnimal = {
         Age: data.age,
         Weight: data.weight,
@@ -139,8 +147,8 @@ export class AnimalService {
 
   async deleteAnimal(animal, res: Response) {
     try {
-      const animalId = animal.id;
-      const animalData = await this.findAnimalId(animalId);
+      const animalId: number = +animal.id;
+      const animalData: Animal = await this.findAnimalId(animalId);
       if (animalData) {
         await this.animalRepository.softDelete({
           id: animalId,
@@ -176,8 +184,8 @@ export class AnimalService {
     }
   }
 
-  async findAnimalId(id: number) {
-    const data = await this.animalRepository.findOne({
+  async findAnimalId(id: number): Promise<Animal> {
+    const data: Animal = await this.animalRepository.findOne({
       where: { id: +id },
       relations: ['donation'],
     });

@@ -24,7 +24,10 @@ export class Medication extends BaseEntity {
   @Column({ type: 'date' })
   vaccination_date: Date;
 
-  @ManyToOne(() => Breed, (breed) => breed.medication)
+  @ManyToOne(
+    (): typeof Breed => Breed,
+    (breed: Breed): Medication[] => breed.medication,
+  )
   breed: Breed;
 
   @CreateDateColumn({ type: 'timestamp' })

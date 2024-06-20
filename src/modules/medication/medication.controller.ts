@@ -10,7 +10,7 @@ import {
   Delete,
   Put,
   Get,
-  UseGuards,
+  // UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -26,7 +26,7 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthGaurd } from '../staff/staff.guard';
+// import { AuthGaurd } from '../staff/staff.guard';
 
 @Controller('medication')
 export class MedicationController {
@@ -44,17 +44,17 @@ export class MedicationController {
   async getMedicationsByBreedId(
     @Param('breedId') breedId: number,
     @Res() res: Response,
-  ) {
+  ): Promise<void> {
     return this.medicationService.getMedicationsByBreedId(breedId, res);
   }
 
   @Get('/getall')
   @ApiTags('Medication')
-  async getAllMedications(@Res() res: Response) {
+  async getAllMedications(@Res() res: Response): Promise<void> {
     return this.medicationService.getAllMedications(res);
   }
 
-  @UseGuards(AuthGaurd)
+  // @UseGuards(AuthGaurd)
   @ApiBearerAuth()
   @Post('/create')
   @HttpCode(200)
@@ -80,7 +80,7 @@ export class MedicationController {
     }
   }
 
-  @UseGuards(AuthGaurd)
+  // @UseGuards(AuthGaurd)
   @ApiBearerAuth()
   @Put('/update/:id')
   @ApiTags('Medication')
@@ -92,7 +92,7 @@ export class MedicationController {
     @Param('id') id: number,
     @Body() updateMedicationDto: UpdateMedicationDto,
     @Res() res: Response,
-  ) {
+  ): Promise<void> {
     return this.medicationService.updateMedication(
       id,
       updateMedicationDto,
@@ -100,7 +100,7 @@ export class MedicationController {
     );
   }
 
-  @UseGuards(AuthGaurd)
+  // @UseGuards(AuthGaurd)
   @ApiBearerAuth()
   @Delete('/delete/:breedId')
   @ApiTags('Medication')
@@ -108,7 +108,10 @@ export class MedicationController {
   @ApiParam({
     name: 'breedId',
   })
-  async deleteMedication(@Param() breedId: number, @Res() res: Response) {
+  async deleteMedication(
+    @Param() breedId: number,
+    @Res() res: Response,
+  ): Promise<void> {
     return await this.medicationService.deleteMedication(breedId, res);
   }
 }

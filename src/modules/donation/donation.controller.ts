@@ -27,6 +27,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthGaurd } from '../staff/staff.guard';
+import { Donation } from './donation.entity';
+import { Customer } from '../customer/customer.entity';
+import { Shelter } from '../shelter/shelter.entity';
+import { Animal } from '../animal/animal.entity';
 
 @Controller('donation')
 export class DonationController {
@@ -45,7 +49,9 @@ export class DonationController {
   @ApiParam({
     name: 'shelterId',
   })
-  async getAllDonation(@Param('shelterId') shelterId: number) {
+  async getAllDonation(
+    @Param('shelterId') shelterId: number,
+  ): Promise<Donation[]> {
     return this.donationService.getAllDonation(shelterId);
   }
 
@@ -62,8 +68,8 @@ export class DonationController {
   async createDonation(
     @Body() donationData: CreateDonationDto,
     @Res() res: Response,
-  ) {
-    const customer = await this.customerservice.findCustomerById(
+  ): Promise<void> {
+    const customer: Customer = await this.customerservice.findCustomerById(
       +donationData.customer.id,
     );
 
@@ -71,7 +77,7 @@ export class DonationController {
       return generalResponse(res, '', 'No customer Found', 'error', true, 400);
     }
 
-    const shelter = await this.shelterService.findShelterId(
+    const shelter: Shelter = await this.shelterService.findShelterId(
       +donationData.shelter.id,
     );
 
@@ -79,7 +85,7 @@ export class DonationController {
       return generalResponse(res, '', 'No shelter Found', 'error', true, 400);
     }
 
-    let animal;
+    let animal: Animal;
     if (donationData.animal) {
       animal = await this.animalService.findAnimalId(+donationData.animal.id);
     }

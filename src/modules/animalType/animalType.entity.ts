@@ -18,9 +18,13 @@ export class AnimalType extends BaseEntity {
   @Column({ type: 'varchar' })
   name: string;
 
-  @OneToMany(() => Animal, (animal) => animal.animalType, {
-    onDelete: 'CASCADE',
-  })
+  @OneToMany(
+    (): typeof Animal => Animal,
+    (animal: Animal): AnimalType => animal.animalType,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
   animal: Animal[];
 
   @CreateDateColumn({ type: 'timestamp' })

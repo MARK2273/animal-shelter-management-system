@@ -3,9 +3,10 @@ import { JwtService } from '@nestjs/jwt';
 import { config } from 'dotenv';
 import { Request } from 'express';
 import { StaffService } from './staff.service';
+import { Staff } from './staff.entity';
 config();
 
-const key = process.env.SECRET_KEY;
+const key: string = process.env.SECRET_KEY;
 
 @Injectable()
 export class AuthGaurd implements CanActivate {
@@ -22,7 +23,7 @@ export class AuthGaurd implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const token = this.extractToken(request);
+    const token: string = this.extractToken(request);
     if (!token) {
       return false;
     } else {
@@ -30,8 +31,11 @@ export class AuthGaurd implements CanActivate {
         const payload = await this.jwtService.verifyAsync(token, {
           secret: key,
         });
+        const data: Staff = await this.staffService.findStaffByEmail(
+          payload.email,
+        );
+        console.log(data);
 
-        const data = await this.staffService.findStaffByEmail(payload.email);
         if (data) {
           request['user'] = data;
           return true;
@@ -39,6 +43,7 @@ export class AuthGaurd implements CanActivate {
           return false;
         }
       } catch (error) {
+        console.log(error);
         return false;
       }
     }

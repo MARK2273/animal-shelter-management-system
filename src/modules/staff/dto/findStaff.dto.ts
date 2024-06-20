@@ -5,7 +5,7 @@ export class FindUser {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({
-    example: 'test@gmail.com',
+    example: 'a@gmail.com',
     required: true,
   })
   email: string;
@@ -13,7 +13,7 @@ export class FindUser {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({
-    example: 'test',
+    example: 'Ayush@123',
     required: true,
   })
   password: string;

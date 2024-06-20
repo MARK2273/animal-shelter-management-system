@@ -4,6 +4,7 @@ import { CreateAdoptionDto } from './dto/adoptionCreate.dto';
 import { Response } from 'express';
 import generalResponse from 'src/helper/genrelResponse.helper';
 import { AnimalRepository } from '../animal/animal.repository';
+import { Adoption } from './adoption.entity';
 
 @Injectable()
 export class AdoptionService {
@@ -19,8 +20,8 @@ export class AdoptionService {
         await this.animalRepository.softDelete(adoption.animal.id);
       }
 
-      const result = this.adoptionRepository.create(adoption);
-      const newAdoption = await this.adoptionRepository.save(result);
+      const result: Adoption = this.adoptionRepository.create(adoption);
+      const newAdoption: Adoption = await this.adoptionRepository.save(result);
 
       return generalResponse(
         res,
@@ -42,7 +43,7 @@ export class AdoptionService {
     }
   }
 
-  async getAllAdoption(id: number) {
+  async getAllAdoption(id: number): Promise<Adoption[]> {
     return this.adoptionRepository.find({
       relations: ['customer', 'shelter', 'animal'],
       where: { shelter: { id } },
