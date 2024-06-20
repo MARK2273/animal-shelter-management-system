@@ -16,7 +16,13 @@ import { Response } from 'express';
 import { AnimalDescriptionService } from './animalDescription.service';
 import { CreateAnimalDescriptionDto } from './dto/animalDescription.dto';
 import { UpdateAnimalDescriptionDto } from './dto/animalDescriptionUpdate.dto';
-import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @Controller('animaldescription')
 export class AnimalDescriptionController {
@@ -28,6 +34,7 @@ export class AnimalDescriptionController {
     return this.animalDescriptionService.getAllAnimalDescription();
   }
 
+  @ApiBearerAuth()
   @Post('/create')
   @HttpCode(200)
   @ApiTags('Animal Description')
@@ -46,6 +53,7 @@ export class AnimalDescriptionController {
     );
   }
 
+  @ApiBearerAuth()
   @Put('/update/:id')
   @ApiTags('Animal Description')
   @ApiConsumes('application/x-www-form-urlencoded')
@@ -64,6 +72,7 @@ export class AnimalDescriptionController {
     );
   }
 
+  @ApiBearerAuth()
   @Delete('/delete/:id')
   @ApiTags('Animal Description')
   @ApiConsumes('application/x-www-form-urlencoded')

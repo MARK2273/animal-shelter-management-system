@@ -18,7 +18,13 @@ import { AnimalService } from '../animal/animal.service';
 import { CustomerService } from '../customer/customer.service';
 import { ShelterService } from '../shelter/shelter.service';
 import generalResponse from 'src/helper/genrelResponse.helper';
-import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @Controller('donation')
 export class DonationController {
@@ -29,6 +35,7 @@ export class DonationController {
     private shelterService: ShelterService,
   ) {}
 
+  @ApiBearerAuth()
   @Get('/get/:shelterId')
   @ApiTags('Donation')
   @ApiConsumes('application/x-www-form-urlencoded')
@@ -39,6 +46,7 @@ export class DonationController {
     return this.donationService.getAllDonation(shelterId);
   }
 
+  @ApiBearerAuth()
   @Post('/create')
   @HttpCode(200)
   @ApiTags('Donation')
@@ -51,7 +59,6 @@ export class DonationController {
     @Body() donationData: CreateDonationDto,
     @Res() res: Response,
   ) {
-    console.log(donationData);
     const customer = await this.customerservice.findCustomerById(
       +donationData.customer.id,
     );

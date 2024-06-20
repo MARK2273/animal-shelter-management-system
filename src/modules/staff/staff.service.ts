@@ -6,6 +6,8 @@ import generalResponse from 'src/helper/genrelResponse.helper';
 import { Shelter } from '../shelter/shelter.entity';
 import { UpdateStaffDto } from './dto/staffUpdate.dto';
 import { EntityManager } from 'typeorm';
+import { FindUser } from './dto/findStaff.dto';
+import { verify } from 'argon2';
 
 @Injectable()
 export class StaffService {
@@ -178,4 +180,47 @@ export class StaffService {
     });
     return staff;
   }
+
+  async verifyUser(userData: FindUser) {
+    try {
+      const data = await this.staffRepository.findOne({
+        where: { email: userData.email },
+      });
+
+      if (data) {
+        const validate = await verify(data.password, userData.password);
+        if (validate) {
+          return this.returnObjectFunction(
+            true,
+            201,
+            `Login Successfull...`,
+            data,
+          );
+        } else {
+          return this.returnObjectFunction(
+            false,
+            401,
+            `Invalid Credentials...`,
+          );
+        }
+      } else {
+        return this.returnObjectFunction(false, 404, `User doesn't Exists...`);
+      }
+    } catch (error) {
+      return this.catchError();
+    }
+  }
+
+  returnObjectFunction = (
+    flag: boolean,
+    code: number,
+    message?: string,
+    data?: any,
+  ) => {
+    return { success: flag, message: message, result: data, statusCode: code };
+  };
+
+  catchError = () => {
+    return this.returnObjectFunction(false, 500, `Something Went wrong...`);
+  };
 }

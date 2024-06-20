@@ -17,13 +17,24 @@ import { StaffService } from './staff.service';
 import { CreateStaffDto } from './dto/createStaff.dto';
 import { ShelterService } from '../shelter/shelter.service';
 import { UpdateStaffDto } from './dto/staffUpdate.dto';
-import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { FindUser } from './dto/findStaff.dto';
+import { JwtService } from '@nestjs/jwt';
+import generalResponse from 'src/helper/genrelResponse.helper';
 
 @Controller('staff')
 export class StaffController {
   constructor(
     private staffService: StaffService,
     private shelterService: ShelterService,
+    private jwtService: JwtService,
   ) {}
 
   @Get('/getall/:id')
@@ -52,6 +63,7 @@ export class StaffController {
     return await this.staffService.createStaff(staffData, shelter, res);
   }
 
+  @ApiBearerAuth()
   @Put('/update/:id')
   @ApiTags('Staff')
   @ApiConsumes('application/x-www-form-urlencoded')
@@ -66,6 +78,7 @@ export class StaffController {
     return this.staffService.updateStaff(id, updateStaffDto, res);
   }
 
+  @ApiBearerAuth()
   @Delete('/delete/:id')
   @ApiTags('Staff')
   @ApiConsumes('application/x-www-form-urlencoded')
@@ -74,5 +87,34 @@ export class StaffController {
   })
   async deleteStaff(@Param() id: number, @Res() res: Response) {
     return await this.staffService.deleteStaff(id, res);
+  }
+
+  @ApiTags('Auth')
+  @Post('login')
+  @ApiConsumes('application/x-www-form-urlencoded')
+  @ApiResponse({ status: 201, description: 'User logged in successfully' })
+  async login(@Body() userdata: FindUser, @Res() response: Response) {
+    const data = await this.staffService.verifyUser(userdata);
+
+    if (data.success) {
+      try {
+        const token = await this.jwtService.signAsync(userdata);
+
+        return response.status(201).json({
+          success: true,
+          message: `User login successfully...`,
+          token: token,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      return generalResponse(
+        response,
+        data.statusCode,
+        data.message,
+        data.result,
+      );
+    }
   }
 }

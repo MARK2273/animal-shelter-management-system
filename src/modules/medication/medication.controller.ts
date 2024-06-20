@@ -18,7 +18,13 @@ import { MedicationDto } from './dto/medication.dto';
 import { BreedService } from '../breed/breed.service';
 import generalResponse from 'src/helper/genrelResponse.helper';
 import { UpdateMedicationDto } from './dto/medicationUpdate.dto';
-import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @Controller('medication')
 export class MedicationController {
@@ -45,7 +51,7 @@ export class MedicationController {
   async getAllMedications(@Res() res: Response) {
     return this.medicationService.getAllMedications(res);
   }
-
+  @ApiBearerAuth()
   @Post('/create')
   @HttpCode(200)
   @ApiTags('Medication')
@@ -70,6 +76,7 @@ export class MedicationController {
     }
   }
 
+  @ApiBearerAuth()
   @Put('/update/:id')
   @ApiTags('Medication')
   @ApiConsumes('application/x-www-form-urlencoded')
@@ -87,7 +94,7 @@ export class MedicationController {
       res,
     );
   }
-
+  @ApiBearerAuth()
   @Delete('/delete/:breedId')
   @ApiTags('Medication')
   @ApiConsumes('application/x-www-form-urlencoded')

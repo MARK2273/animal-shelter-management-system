@@ -11,8 +11,9 @@ import { Response } from 'express';
 
 import { AnimalTypeService } from './animalType.service';
 import { AnimalTypeDto } from './dto/animalType.dto';
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('animalType')
 export class AnimalTypeController {
   constructor(private animalTypeService: AnimalTypeService) {}

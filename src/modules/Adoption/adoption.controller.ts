@@ -17,7 +17,13 @@ import { AnimalService } from '../animal/animal.service';
 import { CustomerService } from '../customer/customer.service';
 import { ShelterService } from '../shelter/shelter.service';
 import generalResponse from 'src/helper/genrelResponse.helper';
-import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @Controller('adoption')
 export class adoptionController {
@@ -28,6 +34,7 @@ export class adoptionController {
     private shelterService: ShelterService,
   ) {}
 
+  @ApiBearerAuth()
   @Get('/get/:shelterId')
   @ApiTags('Adoption')
   @ApiConsumes('application/x-www-form-urlencoded')
@@ -38,6 +45,7 @@ export class adoptionController {
     return this.adoptionService.getAllAdoption(shelterId);
   }
 
+  @ApiBearerAuth()
   @Post('/create')
   @HttpCode(200)
   @ApiTags('Adoption')

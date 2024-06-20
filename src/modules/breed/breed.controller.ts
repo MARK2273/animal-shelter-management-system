@@ -16,7 +16,13 @@ import { Response } from 'express';
 import { BreedService } from './breed.service';
 import { BreedDto, BreedWithMedicationDto } from './dto/breed.dto';
 import { UpdateBreedDto } from './dto/breedUpdate.dto';
-import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @Controller('breed')
 export class BreedController {
@@ -28,6 +34,7 @@ export class BreedController {
     return this.breedService.getAllBreeds();
   }
 
+  @ApiBearerAuth()
   @Post('/create')
   @HttpCode(200)
   @ApiTags('Breed')
@@ -40,6 +47,7 @@ export class BreedController {
     return await this.breedService.createBreed(breedData, res);
   }
 
+  @ApiBearerAuth()
   @Post('/createwithmedication')
   @HttpCode(200)
   @ApiTags('Breed')
@@ -55,6 +63,7 @@ export class BreedController {
     return await this.breedService.createBreedWithMedication(breedData, res);
   }
 
+  @ApiBearerAuth()
   @Put('/update/:id')
   @ApiTags('Breed')
   @ApiConsumes('application/x-www-form-urlencoded')
@@ -69,6 +78,7 @@ export class BreedController {
     return this.breedService.updateBreed(id, updateBreedDto, res);
   }
 
+  @ApiBearerAuth()
   @Delete('/delete/:breedId')
   @ApiTags('Breed')
   @ApiConsumes('application/x-www-form-urlencoded')

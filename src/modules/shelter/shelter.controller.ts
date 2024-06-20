@@ -9,6 +9,7 @@ import {
   Put,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -19,12 +20,21 @@ import {
 } from './dto/createShelter.dto';
 import { ShelterResponseDto } from './dto/shelterResponse.dto';
 import { UpdateShelterDto } from './dto/shelterUpdate.dto';
-import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiParam,
+  ApiTags,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
+import { AuthGaurd } from '../staff/staff.guard';
 
+@ApiBearerAuth()
 @Controller('shelter')
 export class ShelterController {
   constructor(private shelterService: ShelterService) {}
 
+  @UseGuards(AuthGaurd)
   @Post('/create')
   @ApiTags('Shelter')
   @ApiConsumes('application/x-www-form-urlencoded')
