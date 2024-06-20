@@ -11,6 +11,7 @@ import { ShelterService } from '../shelter/shelter.service';
 import { ShelterRepository } from '../shelter/shelter.repository';
 import { StaffRepository } from '../staff/staff.repository';
 import { StaffService } from '../staff/staff.service';
+import { StaffModule } from '../staff/staff.module';
 
 @Module({
   controllers: [adoptionController],
@@ -34,6 +35,7 @@ import { StaffService } from '../staff/staff.service';
       ShelterRepository,
       StaffRepository,
     ]),
+    StaffModule,
   ],
 })
 export class AdoptionModule {}

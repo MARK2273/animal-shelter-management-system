@@ -8,6 +8,7 @@ import {
   Res,
   Param,
   Get,
+  UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -25,6 +26,7 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
+import { AuthGaurd } from '../staff/staff.guard';
 
 @Controller('donation')
 export class DonationController {
@@ -35,6 +37,7 @@ export class DonationController {
     private shelterService: ShelterService,
   ) {}
 
+  @UseGuards(AuthGaurd)
   @ApiBearerAuth()
   @Get('/get/:shelterId')
   @ApiTags('Donation')
@@ -46,6 +49,7 @@ export class DonationController {
     return this.donationService.getAllDonation(shelterId);
   }
 
+  @UseGuards(AuthGaurd)
   @ApiBearerAuth()
   @Post('/create')
   @HttpCode(200)

@@ -10,6 +10,7 @@ import {
   Delete,
   Put,
   Get,
+  UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -25,6 +26,7 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
+import { AuthGaurd } from '../staff/staff.guard';
 
 @Controller('medication')
 export class MedicationController {
@@ -51,6 +53,8 @@ export class MedicationController {
   async getAllMedications(@Res() res: Response) {
     return this.medicationService.getAllMedications(res);
   }
+
+  @UseGuards(AuthGaurd)
   @ApiBearerAuth()
   @Post('/create')
   @HttpCode(200)
@@ -76,6 +80,7 @@ export class MedicationController {
     }
   }
 
+  @UseGuards(AuthGaurd)
   @ApiBearerAuth()
   @Put('/update/:id')
   @ApiTags('Medication')
@@ -94,6 +99,8 @@ export class MedicationController {
       res,
     );
   }
+
+  @UseGuards(AuthGaurd)
   @ApiBearerAuth()
   @Delete('/delete/:breedId')
   @ApiTags('Medication')

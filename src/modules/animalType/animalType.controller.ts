@@ -6,13 +6,16 @@ import {
   UsePipes,
   ValidationPipe,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 
 import { AnimalTypeService } from './animalType.service';
 import { AnimalTypeDto } from './dto/animalType.dto';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { AuthGaurd } from '../staff/staff.guard';
 
+@UseGuards(AuthGaurd)
 @ApiBearerAuth()
 @Controller('animalType')
 export class AnimalTypeController {

@@ -13,6 +13,8 @@ import { AnimalDescriptionService } from '../animalDescription/animalDescription
 import { ShelterRepository } from '../shelter/shelter.repository';
 import { ShelterService } from '../shelter/shelter.service';
 import { StaffRepository } from '../staff/staff.repository';
+import { StaffModule } from '../staff/staff.module';
+import { StaffService } from '../staff/staff.service';
 
 @Module({
   controllers: [AnimalController],
@@ -28,6 +30,7 @@ import { StaffRepository } from '../staff/staff.repository';
     AnimalDescriptionService,
     ShelterRepository,
     ShelterService,
+    StaffService,
   ],
   imports: [
     TypeOrmModule.forFeature([
@@ -39,6 +42,7 @@ import { StaffRepository } from '../staff/staff.repository';
       ShelterRepository,
       StaffRepository,
     ]),
+    StaffModule,
   ],
 })
 export class AnimalModule {}

@@ -10,6 +10,7 @@ import {
   Param,
   Get,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -28,6 +29,7 @@ import {
 import { FindUser } from './dto/findStaff.dto';
 import { JwtService } from '@nestjs/jwt';
 import generalResponse from 'src/helper/genrelResponse.helper';
+import { AuthGaurd } from './staff.guard';
 
 @Controller('staff')
 export class StaffController {
@@ -63,6 +65,7 @@ export class StaffController {
     return await this.staffService.createStaff(staffData, shelter, res);
   }
 
+  @UseGuards(AuthGaurd)
   @ApiBearerAuth()
   @Put('/update/:id')
   @ApiTags('Staff')
@@ -78,6 +81,7 @@ export class StaffController {
     return this.staffService.updateStaff(id, updateStaffDto, res);
   }
 
+  @UseGuards(AuthGaurd)
   @ApiBearerAuth()
   @Delete('/delete/:id')
   @ApiTags('Staff')

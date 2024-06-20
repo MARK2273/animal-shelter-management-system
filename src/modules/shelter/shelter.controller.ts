@@ -29,6 +29,7 @@ import {
 } from '@nestjs/swagger';
 import { AuthGaurd } from '../staff/staff.guard';
 
+@UseGuards(AuthGaurd)
 @ApiBearerAuth()
 @Controller('shelter')
 export class ShelterController {

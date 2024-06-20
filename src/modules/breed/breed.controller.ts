@@ -10,6 +10,7 @@ import {
   Param,
   Delete,
   Get,
+  UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -23,6 +24,7 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
+import { AuthGaurd } from '../staff/staff.guard';
 
 @Controller('breed')
 export class BreedController {
@@ -34,6 +36,7 @@ export class BreedController {
     return this.breedService.getAllBreeds();
   }
 
+  @UseGuards(AuthGaurd)
   @ApiBearerAuth()
   @Post('/create')
   @HttpCode(200)
@@ -47,6 +50,7 @@ export class BreedController {
     return await this.breedService.createBreed(breedData, res);
   }
 
+  @UseGuards(AuthGaurd)
   @ApiBearerAuth()
   @Post('/createwithmedication')
   @HttpCode(200)
@@ -63,6 +67,7 @@ export class BreedController {
     return await this.breedService.createBreedWithMedication(breedData, res);
   }
 
+  @UseGuards(AuthGaurd)
   @ApiBearerAuth()
   @Put('/update/:id')
   @ApiTags('Breed')
@@ -78,6 +83,7 @@ export class BreedController {
     return this.breedService.updateBreed(id, updateBreedDto, res);
   }
 
+  @UseGuards(AuthGaurd)
   @ApiBearerAuth()
   @Delete('/delete/:breedId')
   @ApiTags('Breed')
