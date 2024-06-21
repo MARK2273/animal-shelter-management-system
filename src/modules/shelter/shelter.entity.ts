@@ -1,6 +1,7 @@
-import { Adoption } from '../Adoption/adoption.entity';
+import { Adoption } from '../adoption/adoption.entity';
 import { Animal } from '../animal/animal.entity';
 import { Donation } from '../donation/donation.entity';
+import { PetAccessories } from '../petAccessories/petAccessory.entity';
 import { Staff } from '../staff/staff.entity';
 import {
   BaseEntity,
@@ -68,4 +69,13 @@ export class Shelter extends BaseEntity {
     },
   )
   adoption: Adoption[];
+
+  @OneToMany(
+    () => PetAccessories,
+    (petAccessories: PetAccessories): Shelter => petAccessories.shelter,
+    {
+      cascade: true,
+    },
+  )
+  petAccessories: PetAccessories[];
 }

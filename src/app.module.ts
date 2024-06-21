@@ -10,7 +10,8 @@ import { AnimalDescriptionModule } from './modules/animalDescription/animalDescr
 import { AnimalModule } from './modules/animal/animal.module';
 import { StaffModule } from './modules/staff/staff.module';
 import { DonationModule } from './modules/donation/donation.module';
-import { AdoptionModule } from './modules/Adoption/adoption.module';
+import { AdoptionModule } from './modules/adoption/adoption.module';
+import { PetAccessoriesModule } from './modules/petAccessories/petAccessories.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { AdoptionModule } from './modules/Adoption/adoption.module';
       }),
       inject: [ConfigService],
     }),
+
     CustomerModule,
     ShelterModule,
     AnimalTypeModule,
@@ -48,6 +50,7 @@ import { AdoptionModule } from './modules/Adoption/adoption.module';
     StaffModule,
     DonationModule,
     AdoptionModule,
+    PetAccessoriesModule,
   ],
 })
 export class AppModule {}

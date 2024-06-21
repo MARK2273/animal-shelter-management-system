@@ -64,10 +64,8 @@ export class StaffService {
         async (manager: EntityManager) => {
           const newStaff: Staff = this.staffRepository.create(staff);
           await manager.save(newStaff);
-
           shelter.staff.push(newStaff);
           await manager.save(shelter);
-
           return {
             id: newStaff.id,
             name: newStaff.name,

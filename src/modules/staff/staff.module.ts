@@ -9,6 +9,9 @@ import { AnimalRepository } from '../animal/animal.repository';
 import { AnimalService } from '../animal/animal.service';
 import { JwtModule } from '@nestjs/jwt';
 import { configDotenv } from 'dotenv';
+import { Staff } from './staff.entity';
+import { Shelter } from '../shelter/shelter.entity';
+import { Animal } from '../animal/animal.entity';
 configDotenv();
 const key: string = process.env.SECRET_KEY;
 
@@ -23,11 +26,7 @@ const key: string = process.env.SECRET_KEY;
     AnimalService,
   ],
   imports: [
-    TypeOrmModule.forFeature([
-      StaffRepository,
-      ShelterRepository,
-      AnimalRepository,
-    ]),
+    TypeOrmModule.forFeature([Staff, Shelter, Animal]),
     JwtModule.register({ global: true, secret: key }),
   ],
   exports: [StaffService],

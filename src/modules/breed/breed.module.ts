@@ -8,6 +8,9 @@ import { MedicationService } from '../medication/medication.service';
 import { StaffModule } from '../staff/staff.module';
 import { StaffService } from '../staff/staff.service';
 import { StaffRepository } from '../staff/staff.repository';
+import { Staff } from '../staff/staff.entity';
+import { Medication } from '../medication/medication.entity';
+import { Breed } from './breed.entity';
 
 @Module({
   controllers: [BreedController],
@@ -17,14 +20,8 @@ import { StaffRepository } from '../staff/staff.repository';
     MedicationRepository,
     MedicationService,
     StaffService,
+    StaffRepository,
   ],
-  imports: [
-    TypeOrmModule.forFeature([
-      BreedRepository,
-      MedicationRepository,
-      StaffRepository,
-    ]),
-    StaffModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Breed, Medication, Staff]), StaffModule],
 })
 export class BreedModule {}

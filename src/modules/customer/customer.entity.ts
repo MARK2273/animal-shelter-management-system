@@ -9,7 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Donation } from '../donation/donation.entity';
-import { Adoption } from '../Adoption/adoption.entity';
+import { Adoption } from '../adoption/adoption.entity';
 import { Animal } from '../animal/animal.entity';
 
 @Entity('customers')

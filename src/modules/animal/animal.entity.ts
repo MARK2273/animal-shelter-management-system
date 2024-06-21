@@ -16,7 +16,7 @@ import { AnimalType } from '../animalType/animalType.entity';
 import { Breed } from '../breed/breed.entity';
 import { Shelter } from '../shelter/shelter.entity';
 import { Donation } from '../donation/donation.entity';
-import { Adoption } from '../Adoption/adoption.entity';
+import { Adoption } from '../adoption/adoption.entity';
 
 export enum Gender {
   MALE = 'male',
