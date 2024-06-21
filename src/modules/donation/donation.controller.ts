@@ -31,6 +31,8 @@ import { Donation } from './donation.entity';
 import { Customer } from '../customer/customer.entity';
 import { Shelter } from '../shelter/shelter.entity';
 import { Animal } from '../animal/animal.entity';
+import { PetAccessoriesService } from '../petAccessories/petAccessories.service';
+import { PetAccessories } from '../petAccessories/petAccessory.entity';
 
 @Controller('donation')
 export class DonationController {
@@ -39,6 +41,7 @@ export class DonationController {
     private animalService: AnimalService,
     private customerservice: CustomerService,
     private shelterService: ShelterService,
+    private petAccessoriesService: PetAccessoriesService,
   ) {}
 
   @UseGuards(AuthGaurd)
@@ -69,37 +72,68 @@ export class DonationController {
     @Body() donationData: CreateDonationDto,
     @Res() res: Response,
   ): Promise<void> {
-    const customer: Customer = await this.customerservice.findCustomerById(
-      +donationData.customer.id,
-    );
+    try {
+      const customer: Customer = await this.customerservice.findCustomerById(
+        +donationData.customer.id,
+      );
 
-    if (!customer) {
-      return generalResponse(res, '', 'No customer Found', 'error', true, 400);
+      if (!customer) {
+        return generalResponse(
+          res,
+          '',
+          'No customer Found',
+          'error',
+          true,
+          400,
+        );
+      }
+
+      const shelter: Shelter = await this.shelterService.findShelterId(
+        +donationData.shelter.id,
+      );
+
+      if (!shelter) {
+        return generalResponse(res, '', 'No shelter Found', 'error', true, 400);
+      }
+
+      const isAnimal: Animal = await this.animalService.findAnimalId(
+        donationData.is_to_donationId.id,
+      );
+
+      if (isAnimal && donationData.Type === 'animal') {
+        const type = 'animal';
+        return await this.donationService.createDonation(
+          { ...donationData, donation_info: 'animal' },
+          type,
+          res,
+        );
+      }
+
+      const isGeneral: PetAccessories =
+        await this.petAccessoriesService.validPetAccessoriesById(
+          donationData.is_to_donationId.id,
+        );
+
+      if (isGeneral && donationData.Type === 'general') {
+        const type = 'general';
+
+        return await this.donationService.createDonation(
+          { ...donationData, donation_info: 'general' },
+          type,
+          res,
+        );
+      }
+
+      return generalResponse(res, '', 'No Record Found', 'error', true, 400);
+    } catch (error) {
+      return generalResponse(
+        res,
+        error,
+        'Something Went Wrong',
+        'error',
+        true,
+        400,
+      );
     }
-
-    const shelter: Shelter = await this.shelterService.findShelterId(
-      +donationData.shelter.id,
-    );
-
-    if (!shelter) {
-      return generalResponse(res, '', 'No shelter Found', 'error', true, 400);
-    }
-
-    let animal: Animal;
-    if (donationData.animal) {
-      animal = await this.animalService.findAnimalId(+donationData.animal.id);
-    }
-
-    if (donationData.animal && !animal) {
-      return generalResponse(res, '', 'No Animal Found', 'error', true, 400);
-    }
-
-    if (!donationData.animal) {
-      return await this.donationService.createDonation(donationData, res);
-    }
-    return await this.donationService.createDonation(
-      { ...donationData, donation_info: 'animal' },
-      res,
-    );
   }
 }

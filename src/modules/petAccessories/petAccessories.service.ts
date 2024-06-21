@@ -113,9 +113,7 @@ export class PetAccessoriesService {
         if (!validPetAccessories) {
           const newPetAccessories: PetAccessories =
             this.petAccessoriesRepository.create(petAccessories);
-          console.log(newPetAccessories);
           newPetAccessories.shelter = validShelter;
-          console.log(newPetAccessories);
           await this.petAccessoriesRepository.save(newPetAccessories);
 
           const createdPetAccessories = {

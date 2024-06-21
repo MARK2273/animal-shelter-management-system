@@ -62,7 +62,6 @@ export class petAccessoriesController {
     @Body() petAccessoriesData: PetAccessoriesDto,
     @Res() res: Response,
   ) {
-    console.log(petAccessoriesData);
     return await this.petAccessoriesService.createPetAccessories(
       petAccessoriesData,
       res,

@@ -119,7 +119,14 @@ export class StaffController {
           token: token,
         });
       } catch (error) {
-        console.log(error);
+        return generalResponse(
+          response,
+          error,
+          'Something Went Wrong',
+          'error',
+          true,
+          400,
+        );
       }
     } else {
       return generalResponse(

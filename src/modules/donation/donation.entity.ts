@@ -12,6 +12,7 @@ import {
 import { Animal } from '../animal/animal.entity';
 import { Customer } from '../customer/customer.entity';
 import { Shelter } from '../shelter/shelter.entity';
+import { PetAccessories } from '../petAccessories/petAccessory.entity';
 
 @Entity('donations')
 export class Donation extends BaseEntity {
@@ -37,8 +38,15 @@ export class Donation extends BaseEntity {
     (): typeof Animal => Animal,
     (animal: Animal): Donation[] => animal.donation,
   )
-  @JoinColumn()
+  @JoinColumn({ name: 'to_donation_id' })
   animal?: Animal;
+
+  @ManyToOne(
+    (): typeof PetAccessories => PetAccessories,
+    (petAccessories: PetAccessories): Donation[] => petAccessories.donation,
+  )
+  @JoinColumn({ name: 'to_donation_id' })
+  petaccessories?: PetAccessories;
 
   @ManyToOne(
     (): typeof Customer => Customer,

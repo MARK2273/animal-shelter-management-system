@@ -17,6 +17,8 @@ import { Animal } from '../animal/animal.entity';
 import { Customer } from '../customer/customer.entity';
 import { Shelter } from '../shelter/shelter.entity';
 import { Staff } from '../staff/staff.entity';
+import { PetAccessoriesService } from '../petAccessories/petAccessories.service';
+import { PetAccessoriesRepository } from '../petAccessories/petAccessories.repository';
 
 @Module({
   controllers: [DonationController],
@@ -31,6 +33,8 @@ import { Staff } from '../staff/staff.entity';
     ShelterRepository,
     StaffRepository,
     StaffService,
+    PetAccessoriesRepository,
+    PetAccessoriesService,
   ],
   imports: [
     TypeOrmModule.forFeature([Donation, Animal, Customer, Shelter, Staff]),

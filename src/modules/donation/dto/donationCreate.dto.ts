@@ -1,6 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional } from 'class-validator';
 
+export enum DonationType {
+  ANIMAL = 'animal',
+  GENERAL = 'general',
+}
+
 export class CreateDonationDto {
   @ApiProperty({
     description: 'Donation information',
@@ -10,6 +15,14 @@ export class CreateDonationDto {
   @IsNotEmpty({ message: 'Donation Information should not be empty' })
   @IsOptional()
   donation_info?: string;
+
+  @ApiProperty({
+    description: 'Type of Donation',
+    required: true,
+    example: 'animal',
+  })
+  @IsNotEmpty({ message: 'Donation Type should not be empty' })
+  Type: DonationType;
 
   @ApiProperty({
     description: 'Date of donation',
@@ -22,9 +35,8 @@ export class CreateDonationDto {
     description: 'ID of the animal receiving the donation',
     example: { id: 1 },
   })
-  @IsNotEmpty({ message: 'Animal should not be empty' })
-  @IsOptional()
-  animal?: { id: number };
+  @IsNotEmpty({ message: 'Donation TO ID should not be empty' })
+  is_to_donationId: { id: number };
 
   @ApiProperty({
     description: 'ID of the customer making the donation',

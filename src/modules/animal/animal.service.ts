@@ -62,19 +62,21 @@ export class AnimalService {
         'Cage size': data.cage_size,
       };
 
-      await this.entityManager.transaction(async (manager) => {
-        breed.animal = [...breed.animal, newAnimal];
-        await manager.save(breed);
+      await this.entityManager.transaction(
+        async (manager: EntityManager): Promise<void> => {
+          breed.animal = [...breed.animal, newAnimal];
+          await manager.save(breed);
 
-        animalType.animal = [...animalType.animal, newAnimal];
-        await manager.save(animalType);
+          animalType.animal = [...animalType.animal, newAnimal];
+          await manager.save(animalType);
 
-        animalDescription.animal = newAnimal;
-        await manager.save(animalDescription);
+          animalDescription.animal = newAnimal;
+          await manager.save(animalDescription);
 
-        shelter.animals = [...shelter.animals, newAnimal];
-        await manager.save(shelter);
-      });
+          shelter.animals = [...shelter.animals, newAnimal];
+          await manager.save(shelter);
+        },
+      );
 
       return generalResponse(
         res,
@@ -145,7 +147,7 @@ export class AnimalService {
     }
   }
 
-  async deleteAnimal(animal, res: Response) {
+  async deleteAnimal(animal, res: Response): Promise<void> {
     try {
       const animalId: number = +animal.id;
       const animalData: Animal = await this.findAnimalId(animalId);

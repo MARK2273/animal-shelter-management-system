@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { DonationRepository } from './donation.repository';
-import { CreateDonationDto } from './dto/donationCreate.dto';
 import { Response } from 'express';
 import generalResponse from 'src/helper/genrelResponse.helper';
 import { Donation } from './donation.entity';
@@ -9,17 +8,24 @@ import { Donation } from './donation.entity';
 export class DonationService {
   constructor(private donationRepository: DonationRepository) {}
 
-  async createDonation(
-    donation: CreateDonationDto,
-    res: Response,
-  ): Promise<void> {
+  async createDonation(donation, type: string, res: Response): Promise<void> {
     try {
-      if (donation.animal) {
-        donation = { ...donation, donation_info: 'animal' };
+      let newDonation = donation;
+      if (type === 'animal') {
+        newDonation = {
+          ...newDonation,
+          animal: { id: donation.is_to_donationId.id },
+        };
       }
+      if (type === 'general') {
+        newDonation = {
+          ...newDonation,
+          petaccessories: { id: donation.is_to_donationId.id },
+        };
+      }
+      const result = this.donationRepository.create(newDonation);
 
-      const result: Donation = this.donationRepository.create(donation);
-      const newDonation: Donation = await this.donationRepository.save(result);
+      await this.donationRepository.save(result);
 
       return generalResponse(
         res,

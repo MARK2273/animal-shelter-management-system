@@ -19,8 +19,8 @@ import { Customer } from './customer.entity';
 export class CustomerController {
   constructor(private customerService: CustomerService) {}
 
-  @Get('/getallcustomers')
   @ApiTags('Customer')
+  @Get('/getallcustomers')
   getAllCustomer(): Promise<Customer[]> {
     return this.customerService.getAllCustomer();
   }
