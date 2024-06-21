@@ -84,7 +84,6 @@ export class StaffService {
         201,
       );
     } catch (error) {
-      console.error('Error creating staff:', error);
       return generalResponse(
         res,
         error,

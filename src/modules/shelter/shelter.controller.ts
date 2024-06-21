@@ -58,8 +58,12 @@ export class ShelterController {
   })
   async createShelterWithStaff(
     @Body() createShelterWithDto: CreateShelterWithStaffDto,
+    @Res() res: Response,
   ): Promise<void> {
-    return this.shelterService.createShelterWithStaff(createShelterWithDto);
+    return this.shelterService.createShelterWithStaff(
+      createShelterWithDto,
+      res,
+    );
   }
 
   @Put('/update/:id')

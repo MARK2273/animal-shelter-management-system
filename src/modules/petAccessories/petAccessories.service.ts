@@ -28,6 +28,11 @@ export class PetAccessoriesService {
           name: true,
           quantity: true,
           price: true,
+          shelter: {
+            name: true,
+            email: true,
+            address: true,
+          },
         },
         relations: ['shelter'],
       });
@@ -52,40 +57,6 @@ export class PetAccessoriesService {
       );
     }
   }
-
-  //   async getAllMedications(res): Promise<void> {
-  //     const medication: Medication[] = await this.medicationRepository.find({
-  //       select: {
-  //         allergie: true,
-  //         veterinarian: true,
-  //         vaccination_date: true,
-  //         breed: {
-  //           name: true,
-  //         },
-  //       },
-  //       relations: ['breed'],
-  //     });
-
-  //     if (medication.length > 0) {
-  //       return generalResponse(
-  //         res,
-  //         medication,
-  //         'All Medication',
-  //         'error',
-  //         true,
-  //         400,
-  //       );
-  //     } else {
-  //       return generalResponse(
-  //         res,
-  //         [],
-  //         'No medication found',
-  //         'error',
-  //         true,
-  //         400,
-  //       );
-  //     }
-  //   }
 
   async createPetAccessories(
     petAccessories: PetAccessoriesDto,

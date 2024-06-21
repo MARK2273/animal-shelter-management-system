@@ -63,8 +63,40 @@ export class ShelterService {
 
   async createShelterWithStaff(
     createShelterWithDto: CreateShelterWithStaffDto,
+    res: Response,
   ): Promise<void> {
     const { staff, ...shelterData } = createShelterWithDto;
+
+    const validShelter = await this.shelterRepository.findOne({
+      where: { email: createShelterWithDto.email },
+    });
+
+    if (validShelter) {
+      return generalResponse(
+        res,
+        '',
+        'Email alreday Exsisted',
+        'success',
+        true,
+        201,
+      );
+    }
+
+    staff.forEach(async (worker: CreateStaffWithShelterDto): Promise<void> => {
+      const validWorker: Staff = await this.staffRepository.findOne({
+        where: { email: worker.email },
+      });
+      if (validWorker) {
+        return generalResponse(
+          res,
+          worker.email,
+          'Email alreday Exsisted',
+          'error',
+          true,
+          201,
+        );
+      }
+    });
 
     await this.entityManager.transaction(
       async (manager: EntityManager): Promise<ShelterResponseDto> => {

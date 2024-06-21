@@ -42,7 +42,7 @@ export class AuthGaurd implements CanActivate {
           return false;
         }
       } catch (error) {
-        console.log(error);
+        console.log('error', error);
         return false;
       }
     }

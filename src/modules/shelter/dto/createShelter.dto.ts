@@ -34,11 +34,13 @@ export class CreateShelterWithStaffDto {
   @IsNotEmpty()
   @ApiProperty({
     required: true,
+    example: 'shelter1',
   })
   name: string;
 
   @IsEmail()
   @ApiProperty({
+    example: 'shelter1@gmail.com',
     required: true,
   })
   email: string;
@@ -47,21 +49,31 @@ export class CreateShelterWithStaffDto {
   @IsNotEmpty()
   @ApiProperty({
     required: true,
+    example: 'shelter1 Address',
   })
   address: string;
 
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => CreateStaffWithShelterDto)
+  @Type((): typeof CreateStaffWithShelterDto => CreateStaffWithShelterDto)
   @ApiProperty({
     required: true,
-    example: {
-      name: 'user1',
-      position: 'owner',
-      email: 'user1@gmail.com',
-      password: 'securePassword123',
-      contact: '5555555555',
-    },
+    default: [
+      {
+        name: 'user1',
+        position: 'owner',
+        email: 'ussdcer1@gmail.com',
+        password: 'securePassword123',
+        contact: '5555555555',
+      },
+      {
+        name: 'usswdcver1',
+        position: 'worker',
+        email: 'ussdcwadcer1@gmail.com',
+        password: 'securePassword123',
+        contact: '5555555555',
+      },
+    ],
   })
   staff: CreateStaffWithShelterDto[];
 }

@@ -188,7 +188,7 @@ export class AnimalService {
 
   async findAnimalId(id: number): Promise<Animal> {
     const data: Animal = await this.animalRepository.findOne({
-      where: { id: +id },
+      where: { id },
       relations: ['donation'],
     });
     return data;

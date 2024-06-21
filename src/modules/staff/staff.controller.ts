@@ -31,6 +31,7 @@ import { JwtService } from '@nestjs/jwt';
 import generalResponse from 'src/helper/genrelResponse.helper';
 import { AuthGaurd } from './staff.guard';
 import { Staff } from './staff.entity';
+import { GetData } from 'src/decorators/getCreds.decorator';
 
 @Controller('staff')
 export class StaffController {
@@ -136,5 +137,12 @@ export class StaffController {
         data.result,
       );
     }
+  }
+
+  @Post('/test')
+  @UseGuards(AuthGaurd)
+  @ApiBearerAuth()
+  test(@GetData() user: string): void {
+    console.log(user);
   }
 }
