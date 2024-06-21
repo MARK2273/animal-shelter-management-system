@@ -13,7 +13,6 @@ import { AnimalDescriptionService } from '../animalDescription/animalDescription
 import { ShelterRepository } from '../shelter/shelter.repository';
 import { ShelterService } from '../shelter/shelter.service';
 import { StaffRepository } from '../staff/staff.repository';
-import { StaffModule } from '../staff/staff.module';
 import { StaffService } from '../staff/staff.service';
 import { Animal } from './animal.entity';
 import { Breed } from '../breed/breed.entity';

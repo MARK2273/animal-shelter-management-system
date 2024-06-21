@@ -58,10 +58,10 @@ export class petAccessoriesController {
   })
   @HttpCode(200)
   @UsePipes(ValidationPipe)
-  async createCustomer(
+  async createPetAccessories(
     @Body() petAccessoriesData: PetAccessoriesDto,
     @Res() res: Response,
-  ) {
+  ): Promise<void> {
     return await this.petAccessoriesService.createPetAccessories(
       petAccessoriesData,
       res,
