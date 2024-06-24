@@ -32,6 +32,8 @@ import generalResponse from 'src/helper/genrelResponse.helper';
 import { AuthGaurd } from './staff.guard';
 import { Staff } from './staff.entity';
 import { GetData } from 'src/decorators/getCreds.decorator';
+import { RoleGuard } from 'src/decorators/Roles/role.guard';
+import { Roles } from 'src/decorators/Roles/roles.decorator';
 
 @Controller('staff')
 export class StaffController {
@@ -70,7 +72,8 @@ export class StaffController {
     return await this.staffService.createStaff(staffData, shelter, res);
   }
 
-  @UseGuards(AuthGaurd)
+  @UseGuards(AuthGaurd, RoleGuard)
+  @Roles('owner')
   @ApiBearerAuth()
   @Put('/update/:id')
   @ApiTags('Staff')
@@ -86,7 +89,8 @@ export class StaffController {
     return this.staffService.updateStaff(id, updateStaffDto, res);
   }
 
-  @UseGuards(AuthGaurd)
+  @UseGuards(AuthGaurd, RoleGuard)
+  @Roles('owner')
   @ApiBearerAuth()
   @Delete('/delete/:id')
   @ApiTags('Staff')
