@@ -14,8 +14,9 @@ import { AnimalTypeService } from './animalType.service';
 import { AnimalTypeDto } from './dto/animalType.dto';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { AuthGaurd } from '../staff/staff.guard';
+import { OwnerRoleGuard } from '../staff/owner.guard';
 
-@UseGuards(AuthGaurd)
+@UseGuards(AuthGaurd, OwnerRoleGuard)
 @ApiBearerAuth()
 @Controller('animalType')
 export class AnimalTypeController {

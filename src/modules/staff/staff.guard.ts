@@ -32,7 +32,7 @@ export class AuthGaurd implements CanActivate {
           secret: key,
         });
         const data: Staff = await this.staffRepository.findOne({
-          where: { email: payload.email },
+          where: { email: payload },
         });
 
         if (data) {

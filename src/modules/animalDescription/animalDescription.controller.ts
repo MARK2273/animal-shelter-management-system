@@ -84,7 +84,10 @@ export class AnimalDescriptionController {
   @ApiParam({
     name: 'id',
   })
-  async deleteAnimalDescription(@Param() id: number, @Res() res: Response) {
+  async deleteAnimalDescription(
+    @Param() id: number,
+    @Res() res: Response,
+  ): Promise<void> {
     return await this.animalDescriptionService.deleteAnimalDescription(id, res);
   }
 }

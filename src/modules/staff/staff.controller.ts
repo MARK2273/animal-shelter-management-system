@@ -112,7 +112,7 @@ export class StaffController {
 
     if (data.success) {
       try {
-        const token: string = await this.jwtService.signAsync(userdata);
+        const token: string = await this.jwtService.signAsync(userdata.email);
 
         return response.status(201).json({
           success: true,

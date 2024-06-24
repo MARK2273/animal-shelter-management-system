@@ -11,6 +11,8 @@ import {
 } from 'typeorm';
 import { Shelter } from '../shelter/shelter.entity';
 import { hash } from 'argon2';
+import { Length, Matches } from 'class-validator';
+import { MESSAGES, REGEX } from 'src/app.util';
 
 export enum Position {
   OWNER = 'owner',
@@ -32,6 +34,10 @@ export class Staff extends BaseEntity {
   email: string;
 
   @Column({ type: 'varchar' })
+  @Length(8, 24)
+  @Matches(REGEX.PASSWORD_RULE, {
+    message: MESSAGES.PASSWORD_Message,
+  })
   password: string;
 
   @Column({ type: 'varchar' })
