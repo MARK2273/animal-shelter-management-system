@@ -25,6 +25,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthGaurd } from '../staff/staff.guard';
+import { Roles } from 'src/decorators/Roles/roles.decorator';
+import { RoleGuard } from 'src/decorators/Roles/role.guard';
 
 @Controller('animaldescription')
 export class AnimalDescriptionController {
@@ -36,7 +38,8 @@ export class AnimalDescriptionController {
     return this.animalDescriptionService.getAllAnimalDescription();
   }
 
-  @UseGuards(AuthGaurd)
+  @UseGuards(AuthGaurd, RoleGuard)
+  @Roles('owner')
   @ApiBearerAuth()
   @Post('/create')
   @HttpCode(200)
@@ -76,7 +79,8 @@ export class AnimalDescriptionController {
     );
   }
 
-  @UseGuards(AuthGaurd)
+  @UseGuards(AuthGaurd, RoleGuard)
+  @Roles('owner')
   @ApiBearerAuth()
   @Delete('/delete/:id')
   @ApiTags('Animal Description')

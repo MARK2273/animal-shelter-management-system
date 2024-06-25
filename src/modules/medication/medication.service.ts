@@ -52,7 +52,7 @@ export class MedicationService {
     }
   }
 
-  async getAllMedications(res): Promise<void> {
+  async getAllMedications(res: Response): Promise<void> {
     const medication: Medication[] = await this.medicationRepository.find({
       select: {
         allergie: true,
@@ -72,7 +72,7 @@ export class MedicationService {
         'All Medication',
         'error',
         true,
-        400,
+        200,
       );
     } else {
       return generalResponse(

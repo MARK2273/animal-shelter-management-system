@@ -55,14 +55,14 @@ export class CreateAnimalDto {
 
   @ApiProperty({
     description: 'ID of the breed',
-    example: 1,
+    example: 2,
   })
   @IsNotEmpty({ message: 'Breed should not be empty' })
   breedId: number;
 
   @ApiProperty({
     description: 'ID of the animal description',
-    example: 1,
+    example: 2,
   })
   @IsNotEmpty({ message: 'Animal Description should not be empty' })
   animalDescriptionId: number;

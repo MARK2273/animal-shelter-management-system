@@ -29,6 +29,8 @@ import { AuthGaurd } from '../staff/staff.guard';
 import { Customer } from '../customer/customer.entity';
 import { Shelter } from '../shelter/shelter.entity';
 import { Animal } from '../animal/animal.entity';
+import { Roles } from 'src/decorators/Roles/roles.decorator';
+import { RoleGuard } from 'src/decorators/Roles/role.guard';
 
 @Controller('adoption')
 export class adoptionController {
@@ -50,7 +52,8 @@ export class adoptionController {
   async getMedicationsByBreedId(@Param('shelterId') shelterId: number) {
     return this.adoptionService.getAllAdoption(shelterId);
   }
-  @UseGuards(AuthGaurd)
+  @UseGuards(AuthGaurd, RoleGuard)
+  @Roles('owner')
   @ApiBearerAuth()
   @Post('/create')
   @HttpCode(200)

@@ -33,6 +33,8 @@ import { Shelter } from '../shelter/shelter.entity';
 import { Animal } from '../animal/animal.entity';
 import { PetAccessoriesService } from '../petAccessories/petAccessories.service';
 import { PetAccessories } from '../petAccessories/petAccessory.entity';
+import { Roles } from 'src/decorators/Roles/roles.decorator';
+import { RoleGuard } from 'src/decorators/Roles/role.guard';
 
 @Controller('donation')
 export class DonationController {
@@ -44,7 +46,8 @@ export class DonationController {
     private petAccessoriesService: PetAccessoriesService,
   ) {}
 
-  @UseGuards(AuthGaurd)
+  @UseGuards(AuthGaurd, RoleGuard)
+  @Roles('owner')
   @ApiBearerAuth()
   @Get('/get/:shelterId')
   @ApiTags('Donation')

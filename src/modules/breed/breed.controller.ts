@@ -26,6 +26,8 @@ import {
 } from '@nestjs/swagger';
 import { Breed } from './breed.entity';
 import { AuthGaurd } from '../staff/staff.guard';
+import { RoleGuard } from 'src/decorators/Roles/role.guard';
+import { Roles } from 'src/decorators/Roles/roles.decorator';
 
 @Controller('breed')
 export class BreedController {
@@ -37,7 +39,8 @@ export class BreedController {
     return this.breedService.getAllBreeds();
   }
 
-  @UseGuards(AuthGaurd)
+  @UseGuards(AuthGaurd, RoleGuard)
+  @Roles('owner')
   @ApiBearerAuth()
   @Post('/create')
   @HttpCode(200)
@@ -54,7 +57,8 @@ export class BreedController {
     return await this.breedService.createBreed(breedData, res);
   }
 
-  @UseGuards(AuthGaurd)
+  @UseGuards(AuthGaurd, RoleGuard)
+  @Roles('owner')
   @ApiBearerAuth()
   @Post('/createwithmedication')
   @HttpCode(200)
@@ -87,7 +91,8 @@ export class BreedController {
     return this.breedService.updateBreed(id, updateBreedDto, res);
   }
 
-  @UseGuards(AuthGaurd)
+  @UseGuards(AuthGaurd, RoleGuard)
+  @Roles('owner')
   @ApiBearerAuth()
   @Delete('/delete/:breedId')
   @ApiTags('Breed')

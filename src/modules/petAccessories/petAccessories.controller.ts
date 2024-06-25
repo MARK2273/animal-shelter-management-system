@@ -25,6 +25,8 @@ import {
 } from '@nestjs/swagger';
 import { UpdatePetAccessoriesDto } from './dto/UpdatePetAccessories.dto';
 import { AuthGaurd } from '../staff/staff.guard';
+import { RoleGuard } from 'src/decorators/Roles/role.guard';
+import { Roles } from 'src/decorators/Roles/roles.decorator';
 
 @Controller('petAccessories')
 export class petAccessoriesController {
@@ -48,7 +50,8 @@ export class petAccessoriesController {
     );
   }
 
-  @UseGuards(AuthGaurd)
+  @UseGuards(AuthGaurd, RoleGuard)
+  @Roles('owner')
   @ApiBearerAuth()
   @Post('/create')
   @ApiTags('Pet Accessories')
@@ -88,7 +91,8 @@ export class petAccessoriesController {
     );
   }
 
-  @UseGuards(AuthGaurd)
+  @UseGuards(AuthGaurd, RoleGuard)
+  @Roles('owner')
   @ApiBearerAuth()
   @Delete('/delete/:id')
   @ApiTags('Pet Accessories')

@@ -36,6 +36,8 @@ import { AnimalDescription } from '../animalDescription/animalDescription.entity
 import { Shelter } from '../shelter/shelter.entity';
 import { Animal } from './animal.entity';
 import { AuthGaurd } from '../staff/staff.guard';
+import { RoleGuard } from 'src/decorators/Roles/role.guard';
+import { Roles } from 'src/decorators/Roles/roles.decorator';
 
 @Controller('animal')
 export class AnimalController {
@@ -53,7 +55,8 @@ export class AnimalController {
     return this.animalService.getAllAnimals();
   }
 
-  @UseGuards(AuthGaurd)
+  @UseGuards(AuthGaurd, RoleGuard)
+  @Roles('owner')
   @ApiBearerAuth()
   @Post('/create')
   @HttpCode(200)
@@ -63,7 +66,7 @@ export class AnimalController {
     type: CreateAnimalDto,
   })
   @UsePipes(ValidationPipe)
-  async createCustomer(
+  async createAnimal(
     @Body() customerData: CreateAnimalDto,
     @Res() res: Response,
   ): Promise<void> {
@@ -118,7 +121,8 @@ export class AnimalController {
     return this.animalService.updateAnimal(id, updateAnimalDto, res);
   }
 
-  @UseGuards(AuthGaurd)
+  @UseGuards(AuthGaurd, RoleGuard)
+  @Roles('owner')
   @ApiBearerAuth()
   @Delete('/delete/:id')
   @ApiTags('Animal')

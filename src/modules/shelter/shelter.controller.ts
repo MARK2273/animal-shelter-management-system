@@ -27,6 +27,8 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import { AuthGaurd } from '../staff/staff.guard';
+import { RoleGuard } from 'src/decorators/Roles/role.guard';
+import { Roles } from 'src/decorators/Roles/roles.decorator';
 
 @UseGuards(AuthGaurd)
 @ApiBearerAuth()
@@ -34,7 +36,8 @@ import { AuthGaurd } from '../staff/staff.guard';
 export class ShelterController {
   constructor(private shelterService: ShelterService) {}
 
-  @UseGuards(AuthGaurd)
+  @UseGuards(AuthGaurd, RoleGuard)
+  @Roles('owner')
   @Post('/create')
   @ApiTags('Shelter')
   @ApiConsumes('application/x-www-form-urlencoded')
@@ -50,6 +53,8 @@ export class ShelterController {
     return await this.shelterService.createShelter(shelterData, res);
   }
 
+  @UseGuards(AuthGaurd, RoleGuard)
+  @Roles('owner')
   @Post('/createwithstaff')
   @ApiTags('Shelter')
   @ApiConsumes('application/json')
@@ -80,6 +85,8 @@ export class ShelterController {
     return await this.shelterService.updateShelter(id, updateShelterDto, res);
   }
 
+  @UseGuards(AuthGaurd, RoleGuard)
+  @Roles('owner')
   @Delete('/delete/:id')
   @ApiTags('Shelter')
   @ApiConsumes('application/x-www-form-urlencoded')
